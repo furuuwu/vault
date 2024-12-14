@@ -24,7 +24,9 @@
 
 # git configuration
 
-# read the existing configuration
+![](img/2024-12-14-19-56-27.png)
+
+## read the existing configuration
 
 `git config --list`
 
@@ -38,17 +40,17 @@ To know the email, type:
 
 `git config user.email`
 
-# set a configuration
+## set a configuration
 
 You can set configurations globally or locally.
 
-Set the user information (`user.name` and `user.email`)
+Set/update the user information (`user.name` and `user.email`)
 
 globally
 
 ```bash
-git config --global user.name "FIRST_NAME LAST_NAME"
-git config --global user.email "MY_NAME@example.com"
+git config --global user.name "Your Name"
+git config --global user.email "@example.com"
 ```
 
 locally (in a specific folder)
@@ -85,3 +87,32 @@ In each git repo (`.git/`) you have a local `config` file
 Setting a local configuration changes this file
 
 ![](img/2024-12-14-18-59-43.png)
+
+
+# manage multiple accounts
+
+create a configuration file for teh SSH client. You should have something like this
+
+![](img/2024-12-14-19-58-55.png)
+
+and you need to set the username and email on a per repository basis
+
+eg. typical flow to push to a non-default account
+
+```bash
+git init
+git config --local user.name "Ricardo Abreu"
+git config --local user.email "ricardo-filipe.abreu@capgemini.com"
+git add .
+git commit -m "1st"
+git branch -M main
+# git remote add origin git@github-capgemini.com:<username>/<reponame>.git
+git remote add origin git@github-capgemini.com:ric-capgemini/proj1_Luiz_Ricardo.git
+git push -u origin main
+```
+
+# resources
+
+* https://www.youtube.com/watch?v=ap56ivm0dhw
+
+* https://docs.github.com/en/get-started/getting-started-with-git/setting-your-username-in-git#setting-your-git-username-for-a-single-repository
