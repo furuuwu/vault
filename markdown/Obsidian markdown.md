@@ -109,6 +109,11 @@ print("Hello World!")
 console.log("Hello World!")
 ```
 
-### resources
+## images
+
+Obsidian uses a weird format but I'm not going to use it
+![alt text](img/image.png)
+
+## resources
 
 [FromSergio - Every USEFUL Markdown Syntax That I Use in Obsidian](https://www.youtube.com/watch?v=d8fXEhWy_rY)
