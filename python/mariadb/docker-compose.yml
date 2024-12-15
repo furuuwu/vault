@@ -1,0 +1,16 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-container
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw # Root password
+      MYSQL_DATABASE: example_db # Database to be created
+    ports:
+      - "3307:3306" # Map container port 3306 to host port 3307
+    volumes:
+      - mariadb_data:/var/lib/mysql # Persistent storage for database
+
+volumes:
+  mariadb_data:
+    # Named volume for persistent storage
+    driver: local
