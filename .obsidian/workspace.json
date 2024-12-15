@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "markdown/Obsidian markdown.md",
-                "mode": "source",
+                "file": "git/git.md",
+                "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "Obsidian markdown"
+              "title": "git"
             }
           }
         ]
@@ -164,9 +164,9 @@
   },
   "active": "44ec6f7dee817946",
   "lastOpenFiles": [
+    "markdown/Obsidian markdown.md",
     "daily/2024-12-14.md",
     "2024-12-14.md",
-    "markdown/Obsidian markdown.md",
     "software eng/database relationships (GPT).md",
     "language/Dr Geoff Lindsey - Vocal Fry.md",
     "Welcome.md",
