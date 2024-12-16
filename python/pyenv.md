@@ -31,6 +31,37 @@ The installation created a `~/.pyenv/` directory
 
 ![](img/2024-12-15-17-17-35.png)
 
+## Installation on Ubuntu
+
+```bash
+# remove the existing .pyenv directory
+rm -rf /home/devcontainers/.pyenv
+
+# run the automatic installer in Linux
+curl https://pyenv.run | bash
+
+# edit the shell's configuration file (~/.bashrc in this case)
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv virtualenv-init -)"
+# reload your shell
+source ~/.bashrc
+
+# verify it is working
+pyenv --version
+```
+
+here's the prints and some trouble i run into (looking back, i could have used the existing pyenv)
+
+![](img/2024-12-16-10-59-25.png)
+
+![](img/2024-12-16-11-00-23.png)
+
+![](img/2024-12-16-11-01-41.png)
+
+![](img/2024-12-16-11-02-37.png)
+
 ## Updating and Uninstalling
 
 To uninstall, remove that folder
@@ -122,3 +153,20 @@ concepts:
     ![](img/2024-12-15-17-44-48.png)
 
 
+on WSL, i got some trouble with using it (after the installation). I followed these steps
+
+```bash
+# install a C compiler and other dependencies to build Python
+sudo apt update
+sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
+libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
+
+# verify gcc installation
+gcc --version
+
+# and then it worked
+pyenv install 3.10.0
+pyenv global 3.10.0
+python --version
+```
