@@ -1,3 +1,10 @@
+"""
+the email sending part doesn't work
+
+Less Secure Apps (Gmail): Gmail often blocks sign-ins from apps 
+that it deems less secure (like Python's smtplib). 
+"""
+
 import smtplib
 import requests
 import time
