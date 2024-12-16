@@ -63,6 +63,8 @@ git config --local user.email "MY_NAME@example.com"
 Set the editor to use (`core.editor`)
 
 ```bash
+git config --global core.editor "code --wait"
+# or if you want it to open in a new window
 git config --global core.editor "code --wait --new-window"
 ```
 
