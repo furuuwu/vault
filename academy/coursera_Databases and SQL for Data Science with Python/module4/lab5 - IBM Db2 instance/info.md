@@ -1,0 +1,1 @@
+This Lab will demonstrate how to create a database connection to an instance of IBM Db2 on Cloud.

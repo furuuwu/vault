@@ -1,0 +1,103 @@
+Open Library Search API
+
+The URL format for API is simple. Take the search URL and add .json to the end. Eg:
+
+https://openlibrary.org/search.json?q=the+lord+of+the+rings
+https://openlibrary.org/search.json?title=the+lord+of+the+rings
+https://openlibrary.org/search.json?author=tolkien&sort=new
+https://openlibrary.org/search.json?q=the+lord+of+the+rings&page=2
+https://openlibrary.org/search/authors.json?q=twain
+
+### get the book with title "The Lord of the Rings"
+GET https://openlibrary.org/search.json?title=the+lord+of+the+rings
+
+### get the book with title "It's Only the Himalayas"
+GET https://openlibrary.org/search.json?title=it's+only+the+himalayas
+
+To build the query string, just replace the spaces with pluses (+)
+
+You can see the response below. 
+From it, we want
+the author, which is obtainable with ["docs"][0]["author_name"]
+the genres, which corresponds to ["docs"][0]["subject"], and is a list
+{
+  "numFound": 1,
+  "start": 0,
+  "numFoundExact": true,
+  "docs": [
+    {
+      "author_key": [
+        "OL8084708A"
+      ],
+      "author_name": [
+        "S. Bedford"
+      ],
+      "ebook_access": "no_ebook",
+      "ebook_count_i": 0,
+      "edition_count": 1,
+      "edition_key": [
+        "OL28588870M"
+      ],
+      "first_publish_year": 2016,
+      "has_fulltext": false,
+      "isbn": [
+        "192736647X",
+        "9781927366479"
+      ],
+      "key": "/works/OL21120294W",
+      "language": [
+        "eng"
+      ],
+      "last_modified_i": 1670674333,
+      "lcc": [
+        "G--0465.00000000"
+      ],
+      "number_of_pages_median": 224,
+      "public_scan_b": false,
+      "publish_date": [
+        "2016"
+      ],
+      "publish_year": [
+        2016
+      ],
+      "publisher": [
+        "Brindle & Glass Publishing, Ltd."
+      ],
+      "seed": [
+        "/books/OL28588870M",
+        "/works/OL21120294W",
+        "/authors/OL8084708A",
+        "/subjects/voyages_around_the_world",
+        "/subjects/backpacking"
+      ],
+      "title": "It's Only the Himalayas",
+      "title_suggest": "It's Only the Himalayas",
+      "title_sort": "It's Only the Himalayas",
+      "type": "work",
+      "subject": [
+        "Voyages around the world",
+        "Backpacking"
+      ],
+      "publisher_facet": [
+        "Brindle & Glass Publishing, Ltd."
+      ],
+      "subject_facet": [
+        "Backpacking",
+        "Voyages around the world"
+      ],
+      "_version_": 1795877159109132288,
+      "lcc_sort": "G--0465.00000000",
+      "author_facet": [
+        "OL8084708A S. Bedford"
+      ],
+      "subject_key": [
+        "backpacking",
+        "voyages_around_the_world"
+      ]
+    }
+  ],
+  "num_found": 1,
+  "q": "",
+  "offset": null
+}
+

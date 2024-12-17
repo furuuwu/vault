@@ -1,4 +1,4 @@
-### Representation of Relationships
+# Representation of relationships
 
 1. **One-to-One (1:1):**
     
@@ -137,3 +137,79 @@
 
 1. Allows normalization and better data integrity.
 2. Easy to manage additional attributes for relationships (e.g., enrollment date).
+
+# Full outer join vs cross join
+
+No, these two queries are **not the same**. Let me explain why:
+
+### 1. **`FULL JOIN` Behavior**
+The query:
+```sql
+SELECT * FROM borrower b FULL JOIN loan l ON b.borrower_id = l.borrower_id
+```
+performs a **full outer join**, which means:
+- It includes all rows from both the `borrower` and `loan` tables.
+- If there is a match on `borrower_id`, the matched rows from both tables are combined into one.
+- If there is no match:
+  - Rows from `borrower` with no corresponding `loan` will have `NULL` values for the `loan` columns.
+  - Rows from `loan` with no corresponding `borrower` will have `NULL` values for the `borrower` columns.
+
+### 2. **`CROSS JOIN` Behavior (Implicit JOIN)**
+The query:
+```sql
+SELECT * FROM borrower b, loan l
+```
+performs a **cross join**, which means:
+- It produces the **Cartesian product** of the two tables.
+- Every row in `borrower` is combined with **every row in `loan`**, regardless of any relationship between them.
+- The total number of rows in the result is the product of the number of rows in `borrower` and `loan`.
+
+### Key Differences:
+| **Aspect**          | **FULL JOIN**                                     | **CROSS JOIN**                                 |
+|----------------------|--------------------------------------------------|-----------------------------------------------|
+| **Join Type**        | Full outer join with a matching condition.       | Cartesian product (no condition).            |
+| **Number of Rows**   | At most, the total rows in both tables combined. | The product of rows in both tables.           |
+| **NULL Handling**    | Includes unmatched rows with `NULL` for missing columns. | No `NULL` values due to unmatched rows.       |
+
+### Example:
+Suppose:
+- `borrower` has 2 rows:  
+  | borrower_id | name      |  
+  |-------------|-----------|  
+  | 1           | Alice     |  
+  | 2           | Bob       |  
+
+- `loan` has 2 rows:  
+  | borrower_id | amount    |  
+  |-------------|-----------|  
+  | 1           | 1000      |  
+  | 3           | 1500      |  
+
+#### `FULL JOIN` Output:
+```sql
+SELECT * FROM borrower b FULL JOIN loan l ON b.borrower_id = l.borrower_id;
+```
+Result:
+| borrower_id | name  | borrower_id | amount |  
+|-------------|-------|-------------|--------|  
+| 1           | Alice | 1           | 1000   |  
+| 2           | Bob   | NULL        | NULL   |  
+| NULL        | NULL  | 3           | 1500   |  
+
+#### `CROSS JOIN` Output:
+```sql
+SELECT * FROM borrower b, loan l;
+```
+Result:
+| borrower_id | name   | borrower_id | amount |  
+|-------------|--------|-------------|--------|  
+| 1           | Alice  | 1           | 1000   |  
+| 1           | Alice  | 3           | 1500   |  
+| 2           | Bob    | 1           | 1000   |  
+| 2           | Bob    | 3           | 1500   |  
+
+---
+
+### Conclusion:
+- The **full outer join** produces results based on matching the `borrower_id`, along with unmatched rows from both sides.
+- The **cross join** produces all possible combinations of rows without any matching condition.

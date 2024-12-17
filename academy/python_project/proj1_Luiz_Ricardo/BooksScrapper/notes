@@ -1,0 +1,28 @@
+1. webscrapping and apis
+
+web scrapping from https://books.toscrape.com/
+titulo
+upc
+price
+summary
+stock number
+
+https://books.toscrape.com/catalogue/page-50.html
+
+apis:
+author
+genre
+
+2. persistent storage in a database
+
+We decided to use sqlite
+
+database driver: sqlite3
+
+modeling:
+book
+genre
+
+you could have modelled the author as a separate entity. We are only retreiving the first one!
+
+3. 

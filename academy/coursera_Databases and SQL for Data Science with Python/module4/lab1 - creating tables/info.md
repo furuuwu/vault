@@ -1,0 +1,1 @@
+In this lab, you will practice creating tables, inserting, and querying Data using an SQLite database with python

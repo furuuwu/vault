@@ -1,0 +1,1 @@
+In this hands-on tutorial,  you will create a table, insert some data, and retrieve the results using SQL magic.

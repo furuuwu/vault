@@ -1,0 +1,1 @@
+In this lab, you will learn some commonly used TCL (Transaction Control Language) commands of SQL through the creation of a stored procedure routine.
