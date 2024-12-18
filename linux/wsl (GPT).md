@@ -176,3 +176,89 @@ If you’re unable to fix the issue:
 ---
 
 These steps should help you regain control of your WSL environment and fix the `devcontainers` user issue. Let me know where you're stuck, and we can dig deeper!
+
+
+# free memory and disk space in WSL
+
+To check how much disk space and memory are free and available in WSL, you can use the following commands:
+
+---
+
+### **1. Disk Space in WSL**
+To see how much disk space is free and available:
+```bash
+df -h
+```
+
+#### Output Example:
+```
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb        100G   10G   90G  10% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+```
+
+- **Size:** Total size of the partition.
+- **Used:** Amount of space currently used.
+- **Avail:** Free space available.
+- **Mounted on:** Where the file system is mounted.
+
+Focus on the `/` (root) partition, as this is where WSL stores its data.
+
+---
+
+### **2. Memory Usage in WSL**
+To see how much memory is free and available:
+```bash
+free -h
+```
+
+#### Output Example:
+```
+              total        used        free      shared  buff/cache   available
+Mem:           8.0G        2.5G        3.0G        512M        2.5G        5.0G
+Swap:          2.0G        512M        1.5G
+```
+
+- **total:** Total memory allocated to WSL.
+- **used:** Memory currently in use by WSL.
+- **free:** Memory that is entirely unused.
+- **buff/cache:** Memory used for disk caching and buffers.
+- **available:** Memory available for new applications (includes free + reclaimable buff/cache).
+
+---
+
+### **3. Swap Space in WSL**
+To check swap usage (virtual memory):
+- The `free -h` command above also shows swap space under the "Swap" row.
+- Alternatively, use:
+  ```bash
+  swapon --show
+  ```
+  This shows details of the swap file if enabled.
+
+---
+
+### **4. Combined Summary**
+Run the following commands together to get both disk and memory information:
+```bash
+df -h
+free -h
+```
+
+---
+
+### **Checking Limits**
+If you’ve set specific memory or disk usage limits for WSL in the `~/.wslconfig` file, WSL will honor those settings. To confirm the limits:
+1. Open the `~/.wslconfig` file in Windows (if it exists):
+   ```bash
+   notepad ~/.wslconfig
+   ```
+2. Look for entries like:
+   ```ini
+   [wsl2]
+   memory=4GB
+   swap=2GB
+   ```
+
+If these limits are configured, they will cap the resources available to WSL.
