@@ -358,3 +358,100 @@ pip install -e /opt/airflow/include
 ### 5. **Conclusion**
 
 Adding directories to `sys.path` is a quick fix but not always ideal for long-term code organization. Using `PYTHONPATH`, packaging your code as a module, or placing helper functions in directories Python already knows about (e.g., `dags/`) are better practices for maintainable and portable workflows.
+
+## Run a DAG that depends on another DAG
+
+Using the `TriggerDagRunOperator` is one of the common options to trigger one DAG from another, but the choice depends on your requirements and the nature of the dependency between the two DAGs. Here's an overview of available options and when to use each:
+
+---
+
+### 1. **`TriggerDagRunOperator`**
+   - **Description**: Triggers another DAG directly from within the current DAG.
+   - **When to Use**:
+     - You need to trigger another DAG immediately after a task in the current DAG finishes.
+     - The triggered DAG does not depend on the state of any specific task in the parent DAG, only the fact that it was triggered.
+     - You want to pass custom parameters or configuration to the triggered DAG using the `conf` argument.
+   - **Advantages**:
+     - Simple and direct method to trigger another DAG.
+     - Allows passing configuration data (`conf`) dynamically.
+   - **Limitations**:
+     - No control over upstream DAG tasks. If the upstream DAG fails, the triggered DAG may still run unless explicitly handled.
+
+---
+
+### 2. **`ExternalTaskSensor` + `ExternalTaskMarker`**
+   - **Description**: Creates a dependency between tasks in different DAGs by waiting for a specific task in another DAG to complete.
+   - **When to Use**:
+     - The second DAG should start automatically after a specific task in the first DAG completes successfully.
+     - You want to ensure synchronization between tasks across DAGs.
+     - The downstream DAG can depend on a task state in the upstream DAG (e.g., success or failure).
+   - **Advantages**:
+     - Enforces task-level dependency between DAGs.
+     - Automatically handles clearing and retries based on the upstream task's state.
+   - **Limitations**:
+     - More complex to set up than `TriggerDagRunOperator`.
+     - Does not allow passing custom parameters unless coupled with other methods like XCom.
+
+---
+
+### 3. **Triggering via XComs**
+   - **Description**: Pass data from one DAG to another through XCom, allowing for indirect triggering and communication between the two DAGs.
+   - **When to Use**:
+     - You want to trigger a DAG based on some computed data in the parent DAG.
+     - You need to pass configuration or parameters to the second DAG indirectly.
+   - **Advantages**:
+     - Flexible for passing data between DAGs.
+   - **Limitations**:
+     - Requires setting up a mechanism to poll or listen for XCom messages (or use sensors).
+
+---
+
+### 4. **Manual Triggering (via API or CLI)**
+   - **Description**: Use Airflow's REST API or CLI to trigger a DAG.
+   - **When to Use**:
+     - You need to trigger a DAG on-demand, not as part of a static dependency.
+     - The triggering process is external to Airflow (e.g., another service or a user action).
+   - **Advantages**:
+     - Completely decouples the two DAGs.
+     - Full control over when and how the second DAG is triggered.
+   - **Limitations**:
+     - Requires external configuration and may not be ideal for tightly coupled workflows.
+
+---
+
+### 5. **Custom Python Logic**
+   - **Description**: Use a Python task to execute custom logic that triggers another DAG programmatically (e.g., using the `TriggerDagRunOperator` or Airflow's API).
+   - **When to Use**:
+     - Complex triggering conditions or logic needs to be implemented.
+     - DAG triggering depends on external systems or advanced data checks.
+   - **Advantages**:
+     - Highly flexible.
+   - **Limitations**:
+     - Can make DAGs more complex and harder to maintain.
+
+---
+
+### Comparing Options
+
+| **Feature**                     | **TriggerDagRunOperator** | **ExternalTaskSensor**       | **XComs**                   | **API/CLI**          | **Custom Logic**       |
+|----------------------------------|---------------------------|------------------------------|-----------------------------|----------------------|-------------------------|
+| Simplicity                      | ✅                         | ❌ Requires more setup        | ❌ Medium complexity         | ✅                    | ❌ Complex              |
+| Supports Parameter Passing      | ✅                         | ❌ Not directly supported     | ✅                          | ✅                    | ✅                     |
+| Task-Level Dependency           | ❌                         | ✅                           | ❌                          | ❌                    | ✅ (if implemented)     |
+| Control over Trigger Conditions | ✅                         | ✅                           | ✅                          | ✅                    | ✅                     |
+| Decoupling                      | ❌ Direct link             | ❌ Strong dependency          | ✅                          | ✅                    | ✅                     |
+
+---
+
+### Recommendations:
+1. **For Direct Triggering**: Use `TriggerDagRunOperator` if:
+   - The parent DAG and child DAG are tightly coupled.
+   - You need to pass parameters to the child DAG.
+
+2. **For Task-Level Dependencies**: Use `ExternalTaskSensor` + `ExternalTaskMarker` if:
+   - You need to wait for a specific task in another DAG to complete.
+
+3. **For Advanced Data Passing**: Combine `XCom` or custom Python logic with any of the above options to handle complex dependencies or parameter passing.
+
+4. **For Manual or External Triggers**: Use API or CLI when:
+   - The DAG triggering logic needs to live outside of Airflow or be user-initiated.

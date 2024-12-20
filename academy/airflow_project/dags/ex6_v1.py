@@ -2,18 +2,22 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 import pandas as pd
+from airflow.models import BaseOperator
 
 # Function to push the filename to XCom
 def push_filename_to_xcom(**kwargs):
     # Push the file name to XCom
     file_name = 'titanic.csv'  # Example file name, can be dynamic as needed
-    kwargs['ti'].xcom_push(key='file_name', value=file_name)
+    task_instance: BaseOperator = kwargs['ti']
+    task_instance.xcom_push(key='file_name', value=file_name)
     print(f"Pushed file name {file_name} to XCom")
 
 # Function to pull the filename from XCom
 def pull_filename_from_xcom(**kwargs):
     # Pull the file name from XCom
-    file_name = kwargs['ti'].xcom_pull(task_ids='push_file_name', key='file_name')
+    task_instance: BaseOperator = kwargs['ti']
+    file_name = task_instance.xcom_pull(task_ids='push_file_name', key='file_name')
+    print(f"Pushed file name {file_name} to XCom")
     return file_name
 
 def load_and_print_dataframe(file_name: str):

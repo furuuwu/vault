@@ -1,6 +1,6 @@
 Some exercises to practice:
 
-1. 
+> 1. 
 > Create two tasks in a DAG:
 > * Task 1: Print using a function defined in the DAG.
 > * Task 2: Print using a function defined in a script located in the python_scripts folder.
@@ -179,6 +179,7 @@ use the BashOperator to perform the following:
 * Save the processed file in data/file_destination/some_data.csv
 
 <blockquote>
+
 5. Create a DAG that detects a macro value `{ds}`:
 
 - Read the articles about macros.
@@ -189,20 +190,30 @@ use the BashOperator to perform the following:
 The `{ds}` macro represents the execution date of the DAG run in the format YYYY-MM-DD. You can access this macro directly in your DAG definition.
 
 <blockquote>
+
 6. Create a parent DAG that triggers another DAG:
 
-- The idea is to create a DAG that triggers the execution of another DAG.
-- You can experiment with passing the file name from the parent DAG (e.g., titanic) to the child DAG.
-- Print the dataframe.
-- Use XCom.
+* The idea is to create a DAG that triggers the execution of another DAG.
+* You can experiment with passing the file name from the parent DAG (e.g., titanic) to the child DAG.
+* Print the dataframe.
+* Use XCom.
+
 </blockquote>
 
 I think here we actually want to use a task to trigger another task...
+
 * first Task: This will push the file name (titanic.csv) to XCom.
 * second Task: This will pull the file name from XCom and use it to load the corresponding .csv file into a pandas DataFrame.
 
+see `ex6_v1.py`
 
 XComs (short for "Cross-Communication") in Apache Airflow. XComs are a way for tasks to exchange messages or small data between them, allowing tasks in a DAG to communicate with one another. XComs by default are only available within the context of a single DAG run.
 
 To pass data between different DAGs, we can use a trigger mechanism (using ExternalTaskSensor or manually triggering a second DAG and passing the data via XCom from the parent to the child).
+
+see `ex6_v2_parent.py` and `ex6_v2_child.py` for an example of using xcom to pass data between the dags
+
+If you want to trigger the child DAG automatically after pushing the data, the parent DAG can trigger it using the TriggerDagRunOperator
+
+see `ex6_v3_parent.py`
 
