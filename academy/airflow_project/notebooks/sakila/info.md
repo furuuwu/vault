@@ -1,0 +1,1 @@
+you can run `1. sakila-cheme.sql` and `2. sakila-data_dspa.sql` directly on DBeaver. You need to execute the scripts in the database (right-click Tools>Execute script) and **Disable foreign key checks**) 

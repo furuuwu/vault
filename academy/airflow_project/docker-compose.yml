@@ -1,0 +1,208 @@
+version: "3.3"
+
+services:
+  # Portainer for managing Docker containers
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: always
+    networks:
+      - custom_network
+
+  # Jupyter Notebook
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work  # Mount local notebooks folder to the container to persist data
+    restart: always
+    networks:
+      - custom_network
+
+  # MariaDB Database
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306" 
+    restart: always
+    networks:
+      - custom_network
+      
+  # Adminer for managing MariaDB databases
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - "8081:8080"  # Adminer UI available at localhost:8081
+    restart: always
+    networks:
+      - custom_network
+
+    # Airflow Webserver
+  airflow-webserver:
+    image: apache/airflow:2.8.1
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: airflow-webserver
+    #user: airflow:airflow
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow-db/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=True
+      - PYTHONUNBUFFERED=true  # Optional: improve logging output
+      - AIRFLOW__REQUIREMENTS__EXTRA="--no-cache-dir pymysql"  # Install pymysql
+    ports:
+      - "8080:8080"
+    command: webserver
+    depends_on:
+      - airflow-init
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./data:/opt/airflow/data
+      - ./airflow/config:/opt/airflow/config
+      # my changes
+      - ./python_scripts:/opt/airflow/python_scripts
+    networks:
+      - custom_network
+
+  # Airflow Init
+  airflow-init:
+    image: apache/airflow:2.8.1
+    container_name: airflow-init
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow-db/airflow
+    entrypoint: ["airflow", "db", "init"]
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./data:/opt/airflow/data
+      - ./airflow/config:/opt/airflow/config
+      # my changes
+      - ./python_scripts:/opt/airflow/python_scripts
+    depends_on:
+      - airflow-db
+      - airflow-redis
+    networks:
+      - custom_network
+
+  # Airflow Scheduler
+  airflow-scheduler:
+    image: apache/airflow:2.8.1
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: airflow-scheduler
+    
+    #user: airflow:airflow
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow-db/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=True
+      - PYTHONUNBUFFERED=true  # Optional: improve logging output
+      - AIRFLOW__REQUIREMENTS__EXTRA="--no-cache-dir pymysql"  # Install pymysql
+    
+
+    command: airflow scheduler
+    depends_on:
+      - airflow-init
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./data:/opt/airflow/data
+      - ./airflow/config:/opt/airflow/config
+      # my changes
+      - ./python_scripts:/opt/airflow/python_scripts
+    #  - /home/tcunha/entrypoint.sh:/entrypoint.sh
+    #entrypoint: ["bash", "/entrypoint.sh"]
+    networks:
+      - custom_network
+
+  # Airflow Worker
+  airflow-worker:
+    image: apache/airflow:2.8.1
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: airflow-worker
+    #user: airflow:airflow
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://airflow-redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@airflow-db/airflow
+      - PYTHONUNBUFFERED=true  # Optional: improve logging output
+      - AIRFLOW__REQUIREMENTS__EXTRA="--no-cache-dir pymysql"  # Install pymysql
+    command: celery worker
+    depends_on:
+      - airflow-init
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./data:/opt/airflow/data
+      - ./airflow/config:/opt/airflow/config
+      # my changes
+      - ./python_scripts:/opt/airflow/python_scripts
+    networks:
+      - custom_network
+
+  # Airflow DB
+  airflow-db:
+    image: postgres:13
+    container_name: airflow-db
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - custom_network
+
+  # Airflow Redis
+  airflow-redis:
+    image: redis:6
+    container_name: airflow-redis
+    networks:
+      - custom_network
+
+volumes:
+  portainer_data:
+    driver: local
+  mariadb_data:
+    driver: local
+  pgdata:
+    driver: local
+
+networks:
+  custom_network:
+    driver: bridge  # Use the bridge network driver

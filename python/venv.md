@@ -13,14 +13,15 @@ python -m venv venv
 this depends on the OS and shell you are using
 
 On Windows
- - on Git Bash,
+
+- on Git Bash,
 
 ```bash
 source venv/Scripts/activate
 ```
 
-
 On Linux
+
 - on bash,
 
 ```bash
