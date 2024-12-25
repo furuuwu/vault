@@ -861,3 +861,944 @@ After you're done with the RDD operations, always stop the `SparkContext`.
 # Stop SparkContext
 sc.stop()
 ```
+
+## connecting to a database (JDBC version)
+
+To connect to a database and read the data into an Apache Spark Resilient Distributed Dataset (RDD), you typically use a JDBC connection. Here's a step-by-step guide:
+
+---
+
+### **1. Configure the Database Connection**
+
+You need the following details:
+
+- **JDBC URL**: The URL for your database (e.g., `jdbc:postgresql://hostname:port/database`).
+- **Driver Class**: The class name for the JDBC driver (e.g., `org.postgresql.Driver`).
+- **Credentials**: Username and password for the database.
+
+---
+
+### **2. Add the JDBC Driver**
+
+Ensure that the JDBC driver for your database is available in your Spark environment. This is usually done by including the driver JAR file in the Spark classpath.
+
+---
+
+### **3. Read Data into an RDD**
+
+Apache Spark does not directly load data into an RDD via JDBC. Instead, you typically use DataFrames or Datasets for this purpose, and then convert them to an RDD if needed.
+
+Here’s a code example using PySpark:
+
+#### Example: Read Data from PostgreSQL into RDD
+
+```python
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("DatabaseRDDExample") \
+    .getOrCreate()
+
+# JDBC connection properties
+jdbc_url = "jdbc:postgresql://localhost:5432/your_database"
+connection_properties = {
+    "user": "your_username",
+    "password": "your_password",
+    "driver": "org.postgresql.Driver"
+}
+
+# Query to fetch data
+query = "(SELECT * FROM your_table) AS temp"
+
+# Load data as DataFrame
+df = spark.read.jdbc(url=jdbc_url, table=query, properties=connection_properties)
+
+# Convert DataFrame to RDD
+rdd = df.rdd
+
+# Example operation on RDD
+print(rdd.take(5))
+```
+
+---
+
+### **4. Key Points**
+
+- **Efficiency**: Direct JDBC reads are typically used for smaller datasets. For large datasets, consider exporting the data to a distributed file system like HDFS or Amazon S3 for better performance.
+- **Schema Inference**: Spark automatically infers the schema when reading data using JDBC.
+- **Parallelism**: You can improve parallelism by specifying partitioning options (`numPartitions`, `partitionColumn`, `lowerBound`, `upperBound`) when reading from the database.
+
+---
+
+### **5. Using Scala or Java**
+
+The process in Scala or Java is similar but uses Spark’s `read` API and then converts the DataFrame to an RDD:
+
+#### Example (Scala)
+
+```java
+val spark = SparkSession.builder.appName("DatabaseRDDExample").getOrCreate()
+
+val jdbcUrl = "jdbc:postgresql://localhost:5432/your_database"
+val connectionProperties = new java.util.Properties()
+connectionProperties.setProperty("user", "your_username")
+connectionProperties.setProperty("password", "your_password")
+connectionProperties.setProperty("driver", "org.postgresql.Driver")
+
+val query = "(SELECT * FROM your_table) AS temp"
+
+// Load data as DataFrame
+val df = spark.read.jdbc(jdbcUrl, query, connectionProperties)
+
+// Convert DataFrame to RDD
+val rdd = df.rdd
+
+// Example operation on RDD
+rdd.take(5).foreach(println)
+```
+
+---
+
+### **6. Debugging Tips**
+
+- **Driver Issues**: Ensure the JDBC driver is compatible with the database version.
+- **Firewall/Network**: Verify connectivity between your Spark cluster and the database.
+- **Partitioning**: Use partitioning to parallelize the data read for large datasets.
+
+By following these steps, you can successfully connect to a database and load the data into an RDD for processing in Apache Spark.
+
+### Same thing using PySpark with DataFrames (SparkSQL)
+
+to connect to a database and query data is straightforward. Here's how you can do it step-by-step:
+
+---
+
+#### **Configure the Database Connection**
+
+You’ll need:
+
+- **JDBC URL**: For example, `jdbc:postgresql://host:port/database`.
+- **Driver**: The JDBC driver class (e.g., `org.postgresql.Driver`).
+- **Credentials**: Username and password for the database.
+
+---
+
+#### **Read Data into a DataFrame**
+
+Spark provides a method to read data from a database table or query into a DataFrame using JDBC.
+
+##### Example: Load Data from PostgreSQL into a DataFrame
+
+```python
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("DatabaseDataFrameExample") \
+    .getOrCreate()
+
+# JDBC connection properties
+jdbc_url = "jdbc:postgresql://localhost:5432/your_database"
+connection_properties = {
+    "user": "your_username",
+    "password": "your_password",
+    "driver": "org.postgresql.Driver"
+}
+
+# Read entire table as DataFrame
+df = spark.read.jdbc(url=jdbc_url, table="your_table", properties=connection_properties)
+
+# Or read using a SQL query
+query = "(SELECT * FROM your_table WHERE column > 100) AS temp"
+df = spark.read.jdbc(url=jdbc_url, table=query, properties=connection_properties)
+
+# Show DataFrame
+df.show()
+```
+
+---
+
+#### **Perform SQL Operations**
+
+You can register the DataFrame as a temporary SQL table and use SparkSQL for further operations.
+
+##### Example: Use SparkSQL to Query the DataFrame
+
+```python
+# Register DataFrame as a temporary SQL view
+df.createOrReplaceTempView("your_table_view")
+
+# Use SparkSQL to run queries
+result_df = spark.sql("SELECT column1, column2 FROM your_table_view WHERE column1 > 100")
+result_df.show()
+```
+
+---
+
+#### **Write Data Back to the Database**
+
+You can also write transformed data back to the database.
+
+#### Example: Save DataFrame to Database Table
+
+```python
+# Write the DataFrame back to a database table
+result_df.write.jdbc(
+    url=jdbc_url,
+    table="target_table",
+    mode="overwrite",  # Options: 'overwrite', 'append', 'ignore', 'error'
+    properties=connection_properties
+)
+```
+
+---
+
+#### **Optimize for Large Data**
+
+For large datasets, improve performance by configuring parallel reads:
+
+- **`partitionColumn`**: Column used for splitting data (must be numeric or timestamp).
+- **`lowerBound`**: Minimum value of the partition column.
+- **`upperBound`**: Maximum value of the partition column.
+- **`numPartitions`**: Number of partitions (Spark tasks).
+
+##### Example with Partitioning
+
+```python
+df = spark.read.jdbc(
+    url=jdbc_url,
+    table="your_table",
+    properties=connection_properties,
+    column="id",  # Partition column
+    lowerBound=1,  # Minimum value of the column
+    upperBound=1000,  # Maximum value of the column
+    numPartitions=10  # Number of partitions
+)
+df.show()
+```
+
+---
+
+#### **Key Benefits of DataFrames in PySpark**
+
+- **SQL Integration**: Perform complex queries using SQL syntax.
+- **Schema Inference**: Automatic detection of column types.
+- **Optimized Execution**: Catalyst optimizer improves query performance.
+- **Interoperability**: Easy conversion between DataFrames and RDDs.
+
+DataFrames are typically preferred over RDDs for database operations due to their simplicity, built-in optimizations, and SQL support.
+
+## connecting to a database (SQLAlchemy version)
+
+While SQLAlchemy itself doesn’t natively integrate with Spark, you can use it to connect to the database and fetch data, which can then be loaded into a PySpark DataFrame.
+
+Here’s how you can do it:
+
+---
+
+### **1. Install Required Libraries**
+
+Make sure you have the required libraries installed:
+
+```bash
+pip install sqlalchemy psycopg2 pandas
+```
+
+---
+
+### **2. Use SQLAlchemy to Fetch Data**
+
+SQLAlchemy is used to establish a connection and execute queries, returning the result as a Pandas DataFrame. PySpark can then convert this Pandas DataFrame to a Spark DataFrame.
+
+#### Example: Using SQLAlchemy with PySpark
+
+```python
+from sqlalchemy import create_engine
+import pandas as pd
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("SQLAlchemyExample") \
+    .getOrCreate()
+
+# Create SQLAlchemy engine
+engine = create_engine("postgresql+psycopg2://username:password@localhost:5432/your_database")
+
+# Query data using SQLAlchemy and load into Pandas
+query = "SELECT * FROM your_table WHERE column > 100"
+pandas_df = pd.read_sql_query(query, con=engine)
+
+# Convert Pandas DataFrame to PySpark DataFrame
+spark_df = spark.createDataFrame(pandas_df)
+
+# Show the Spark DataFrame
+spark_df.show()
+```
+
+---
+
+### **3. Perform Operations in PySpark**
+
+Once the data is in a Spark DataFrame, you can perform transformations or register it as a temporary SQL view for further processing.
+
+#### Example: Register and Query with SparkSQL
+
+```python
+spark_df.createOrReplaceTempView("your_table_view")
+result_df = spark.sql("SELECT column1, column2 FROM your_table_view WHERE column1 > 100")
+result_df.show()
+```
+
+---
+
+### **4. Write Data Back to the Database**
+
+If you want to write the transformed data back to the database, you can use PySpark’s JDBC capabilities or a library like SQLAlchemy or Pandas.
+
+#### Example: Write Back with SQLAlchemy (using Pandas)
+
+```python
+# Convert Spark DataFrame to Pandas DataFrame
+result_pandas_df = result_df.toPandas()
+
+# Write data back to the database using SQLAlchemy
+result_pandas_df.to_sql(
+    name="target_table",
+    con=engine,
+    if_exists="replace",  # Options: 'fail', 'replace', 'append'
+    index=False
+)
+```
+
+---
+
+### **5. Key Points to Consider**
+
+- **Performance**: Transferring large datasets between Pandas and PySpark can be slow and memory-intensive. For very large datasets, stick to PySpark’s JDBC integration instead.
+- **Flexibility**: SQLAlchemy is highly flexible for interacting with databases but lacks the distributed computing advantages of PySpark.
+- **Parallelism**: SQLAlchemy queries are executed on a single node, unlike PySpark’s JDBC method, which can utilize multiple partitions.
+
+---
+
+### **When to Use SQLAlchemy with PySpark**
+
+- **Prototyping**: For smaller datasets or quick experiments.
+- **Custom Queries**: If you need complex SQLAlchemy features or ORM capabilities.
+- **Interoperability**: When working with existing SQLAlchemy/Pandas pipelines but want to leverage PySpark for distributed processing later.
+
+For large-scale distributed processing, PySpark's built-in JDBC support is typically better. However, SQLAlchemy is a great option when dealing with smaller or more controlled workloads.
+
+## docker setup to run Spark in local mode
+
+You can use a standard Python image and manually install **Jupyter** and **PySpark**. Here's how:
+
+---
+
+### **1. Use a Base Python Image**
+
+Instead of using `jupyter/pyspark-notebook`, you can start with a lightweight Python image (e.g., `python:3.9-slim`) and install the necessary dependencies for PySpark and Jupyter Notebook.
+
+---
+
+### **2. Updated Directory Structure**
+
+Your project might look like this:
+
+```none
+pyspark-docker/
+├── docker-compose.yml
+├── app/
+│   ├── script.py         # Your PySpark script
+│   ├── init.sql          # MariaDB initialization script
+│   └── requirements.txt  # Python dependencies
+├── Dockerfile
+```
+
+```sql
+-- init.sql
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255),
+  age INT
+);
+
+INSERT INTO users (name, age) VALUES
+('Alice', 29),
+('Bob', 31),
+('Cathy', 27);
+
+```
+
+```python
+# script.py
+from pyspark.sql import SparkSession
+
+# Initialize Spark Session
+spark = SparkSession.builder \
+    .appName("PySpark with MariaDB") \
+    .getOrCreate()
+
+# JDBC connection properties
+jdbc_url = "jdbc:mysql://mariadb:3306/mydatabase"
+connection_properties = {
+    "user": "myuser",
+    "password": "mypassword",
+    "driver": "org.mariadb.jdbc.Driver"
+}
+
+# Read data from MariaDB
+df = spark.read.jdbc(url=jdbc_url, table="users", properties=connection_properties)
+
+# Show the DataFrame
+df.show()
+
+# Stop Spark Session
+spark.stop()
+```
+
+---
+
+### **3. Dockerfile**
+
+Create a `Dockerfile` for the custom Python image.
+
+```dockerfile
+# Base Python image
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jdk-headless \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for Java and PySpark
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+# Install PySpark, Jupyter, and other dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose Jupyter port
+EXPOSE 8888
+
+# Command to start Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+```
+
+---
+
+### **4. requirements.txt**
+
+Specify the Python libraries you need, including **PySpark** and **Jupyter**.
+
+```text
+pyspark
+jupyter
+```
+
+You can add any additional libraries here, like `pandas`, `numpy`, or `mariadb`.
+
+---
+
+### **5. docker-compose.yml**
+
+Update the `docker-compose.yml` to use your custom image and retain the MariaDB service.
+
+```yaml
+version: "3.9"
+services:
+  spark-python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spark-python
+    ports:
+      - "8888:8888"  # Jupyter Notebook port
+    volumes:
+      - ./app:/app  # Mount your app directory
+    environment:
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=python3
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+    ports:
+      - "3306:3306"  # MariaDB port
+    volumes:
+      - mariadb_data:/var/lib/mysql  # Persist database data
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql  # Optional: Initialize database
+volumes:
+  mariadb_data:
+```
+
+---
+
+### **6. Run the Setup**
+
+Build and start the containers:
+
+```bash
+docker-compose up --build
+```
+
+---
+
+### **7. Access the Services**
+
+- **Jupyter Notebook**: [http://localhost:8888](http://localhost:8888). Use the token from the container logs to log in.
+- **MariaDB**:
+  - Host: `localhost`
+  - Port: `3306`
+  - Database: `mydatabase`
+  - User: `myuser`
+  - Password: `mypassword`
+
+---
+
+### **Advantages of This Approach**
+
+1. **Customization**: You have full control over the dependencies and environment.
+2. **Lightweight**: The base Python image is smaller than the prebuilt Jupyter images.
+3. **Flexibility**: You can adapt this setup for other Python-based tools or libraries.
+
+This setup provides a clean and customized environment for running PySpark and Jupyter Notebook alongside MariaDB.
+
+## docker setup that uses a Spark cluster
+
+Here’s how to add **Spark Master** and **Spark Worker** services back into your **Docker Compose** setup while keeping MariaDB and your custom Python environment. This will allow you to use a proper Spark cluster for distributed data processing.
+
+---
+
+### **Updated Directory Structure**
+
+```none
+pyspark-docker/
+├── docker-compose.yml
+├── app/
+│   ├── script.py         # Your PySpark script
+│   ├── init.sql          # MariaDB initialization script
+│   └── requirements.txt  # Python dependencies
+├── Dockerfile
+```
+
+---
+
+### **Updated docker-compose.yml**
+
+This updated configuration includes **spark-master**, **spark-worker**, **MariaDB**, and your custom Python container.
+
+```yaml
+version: "3.9"
+services:
+  spark-master:
+    image: bitnami/spark:latest
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "7077:7077"  # Spark master port
+      - "8080:8080"  # Spark Web UI
+
+  spark-worker:
+    image: bitnami/spark:latest
+    container_name: spark-worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+
+  spark-python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spark-python
+    ports:
+      - "8888:8888"  # Jupyter Notebook port
+    volumes:
+      - ./app:/app  # Mount your app directory
+    environment:
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=python3
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+      - spark-worker
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+    ports:
+      - "3306:3306"  # MariaDB port
+    volumes:
+      - mariadb_data:/var/lib/mysql  # Persist database data
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql  # Optional: Initialize database
+volumes:
+  mariadb_data:
+```
+
+---
+
+### **Custom Dockerfile for PySpark Python**
+
+The `Dockerfile` for the `spark-python` container includes PySpark and Jupyter Notebook, and it connects to the Spark cluster.
+
+```dockerfile
+# Base Python image
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jdk-headless \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for Java and PySpark
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+# Install PySpark, Jupyter, and other dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose Jupyter port
+EXPOSE 8888
+
+# Command to start Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+```
+
+---
+
+### **PySpark Script Example**
+
+In your `app/script.py`, use the `SPARK_MASTER_URL` to connect to the Spark master.
+
+```python
+from pyspark.sql import SparkSession
+
+# Initialize Spark Session with Spark master
+spark = SparkSession.builder \
+    .appName("PySpark with Spark Cluster and MariaDB") \
+    .master("spark://spark-master:7077") \
+    .getOrCreate()
+
+# JDBC connection properties
+jdbc_url = "jdbc:mysql://mariadb:3306/mydatabase"
+connection_properties = {
+    "user": "myuser",
+    "password": "mypassword",
+    "driver": "org.mariadb.jdbc.Driver"
+}
+
+# Read data from MariaDB
+df = spark.read.jdbc(url=jdbc_url, table="users", properties=connection_properties)
+
+# Show the DataFrame
+df.show()
+
+# Stop Spark Session
+spark.stop()
+```
+
+---
+
+### **Steps to Run**
+
+1. **Build and Start Containers**:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Access Services**:
+   - **Spark Master Web UI**: [http://localhost:8080](http://localhost:8080)
+   - **Jupyter Notebook**: [http://localhost:8888](http://localhost:8888). Use the token from the logs.
+   - **MariaDB**: Access via `localhost:3306` with credentials specified in `docker-compose.yml`.
+
+3. **Submit Spark Jobs**:
+   Use `spark-submit` to run your PySpark script on the Spark cluster:
+
+   ```bash
+   docker exec -it spark-python spark-submit /app/script.py
+   ```
+
+---
+
+### **Scalability**
+
+To scale up your Spark cluster, you can add more workers:
+
+```yaml
+  spark-worker-2:
+    image: bitnami/spark:latest
+    container_name: spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+```
+
+---
+
+### **Summary**
+
+- **Spark Master** and **Workers** provide a distributed processing environment.
+- **Spark Python Container** acts as your PySpark driver, connecting to the Spark cluster.
+- **MariaDB** stores your data and can be queried from PySpark via JDBC.
+
+This setup is ready for distributed processing while supporting PySpark and MariaDB.
+
+## docker compose setups using the jupyter/base-notebook image
+
+Here are the two **Docker Compose** configurations you're asking for. One setup is for a **local Spark** environment, and the other is for a **distributed Spark cluster**. Both setups include **MariaDB** and **Jupyter Notebook**.
+
+---
+
+### **1. Local Spark Setup (docker-compose-local.yml)**
+
+In this setup, Spark is run locally on a single node. This is simpler to set up and use for development or small-scale tasks.
+
+```yaml
+version: "3.9"
+services:
+  # Jupyter Notebook
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"  # Jupyter Notebook port
+    volumes:
+      - ./notebooks:/home/jovyan/work  # Mount local notebooks folder to the container to persist data
+    restart: always
+    networks:
+      - custom_network
+
+  # MariaDB Database
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306" 
+    restart: always
+    networks:
+      - custom_network
+
+  # Spark (Local Mode)
+  spark:
+    image: bitnami/spark:latest
+    container_name: spark
+    environment:
+      - SPARK_MODE=local
+    ports:
+      - "4040:4040"  # Spark UI port
+      - "7077:7077"  # Spark master port
+    volumes:
+      - ./spark:/app  # Mount your application code
+    command: ["spark-submit", "/app/script.py"]  # Run your Spark job
+    networks:
+      - custom_network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  custom_network:
+    driver: bridge
+```
+
+**Key Points:**
+
+- **Spark runs in local mode** (`SPARK_MODE=local`), using a single node.
+- **Jupyter Notebook** is running with the `jupyter/base-notebook:latest` image.
+- **MariaDB** is available on port `3306` and has a basic setup.
+
+---
+
+### **2. Spark Cluster Setup (docker-compose-cluster.yml)**
+
+In this setup, you’ll have a **Spark Master** and **Spark Workers** running in a distributed Spark environment, suitable for scaling your processing.
+
+```yaml
+version: "3.9"
+services:
+  # Jupyter Notebook
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"  # Jupyter Notebook port
+    volumes:
+      - ./notebooks:/home/jovyan/work  # Mount local notebooks folder to the container to persist data
+    restart: always
+    networks:
+      - custom_network
+
+  # MariaDB Database
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306" 
+    restart: always
+    networks:
+      - custom_network
+
+  # Spark Master
+  spark-master:
+    image: bitnami/spark:latest
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "8080:8080"  # Spark UI for the master node
+      - "7077:7077"  # Spark master port
+    networks:
+      - custom_network
+
+  # Spark Worker 1
+  spark-worker-1:
+    image: bitnami/spark:latest
+    container_name: spark-worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+    networks:
+      - custom_network
+
+  # Spark Worker 2
+  spark-worker-2:
+    image: bitnami/spark:latest
+    container_name: spark-worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+    networks:
+      - custom_network
+
+  # Spark Python (for running jobs)
+  spark-python:
+    image: jupyter/base-notebook:latest
+    container_name: spark-python
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    ports:
+      - "8888:8888"  # Jupyter Notebook port
+    volumes:
+      - ./notebooks:/home/jovyan/work  # Mount local notebooks folder to the container to persist data
+    depends_on:
+      - spark-master
+      - spark-worker-1
+      - spark-worker-2
+      - mariadb
+    networks:
+      - custom_network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  custom_network:
+    driver: bridge
+```
+
+**Key Points:**
+
+- **Spark Master** and **Spark Workers** are set up, allowing for distributed computation. You can add more workers if needed.
+- **Spark Master URL** (`spark://spark-master:7077`) is used to connect the workers and the Python service.
+- **Jupyter Notebook** can be accessed from the Python container or directly.
+
+### **Running the Setups**
+
+1. **For Local Mode**:
+
+   ```bash
+   docker-compose -f docker-compose-local.yml up --build
+   ```
+
+2. **For Spark Cluster Mode**:
+
+   ```bash
+   docker-compose -f docker-compose-cluster.yml up --build
+   ```
+
+---
+
+### **How to Run PySpark Jobs**
+
+- **Jupyter Notebook** will run as usual. Once inside the notebook, you can submit jobs to Spark (local or cluster) by setting the `SPARK_MASTER_URL` in your PySpark script:
+
+  ```python
+  from pyspark.sql import SparkSession
+
+  # Create Spark session for Spark Cluster
+  spark = SparkSession.builder \
+      .appName("PySpark Cluster") \
+      .master("spark://spark-master:7077") \
+      .getOrCreate()
+
+  # Example: Load data from MariaDB (you can use jdbc for this)
+  jdbc_url = "jdbc:mysql://mariadb:3306/mydatabase"
+  connection_properties = {
+      "user": "user",
+      "password": "password",
+      "driver": "org.mariadb.jdbc.Driver"
+  }
+
+  # Read data from MariaDB
+  df = spark.read.jdbc(url=jdbc_url, table="users", properties=connection_properties)
+
+  df.show()
+  ```
+
+By choosing between the local or cluster setup, you can easily scale your processing or run smaller jobs locally for testing or development.
