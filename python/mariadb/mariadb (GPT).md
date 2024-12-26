@@ -342,3 +342,73 @@ python c:/Users/ricga/OneDrive/obsidian_vaults/vault/python/mariadb/main.py
 - Run your script again.
 
 This should resolve the error you're encountering. Let me know if you need further assistance!
+
+## ERROR - access denied when creating a database
+
+The error `(1044, "Access denied for user 'user'@'%' to database 'titanic'")` indicates that the MySQL user you're using (`user`) does not have the necessary privileges to create databases. 
+
+### **Why This Happens**
+The user specified in your Docker Compose configuration (`MYSQL_USER=user` and `MYSQL_PASSWORD=password`) likely has restricted permissions. By default, MySQL users other than `root` don't have the `CREATE DATABASE` privilege.
+
+---
+
+### **Fixes**
+
+#### **1. Use the Root User**
+Modify your connection string to use the `root` user:
+```python
+db_url = "mysql+pymysql://root:rootpassword@mariadb:3306/"
+```
+
+Then execute the database creation code again. Root has the necessary permissions to create a database.
+
+---
+
+#### **2. Grant Database Creation Privileges to Your User**
+If you want to continue using the `user` account, grant it the `CREATE DATABASE` privilege. Run the following SQL commands using the root user:
+```sql
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
+```
+
+You can execute this from within the MariaDB container:
+```bash
+docker exec -it mariadb mysql -u root -p
+```
+Enter the `MYSQL_ROOT_PASSWORD` (set to `rootpassword` in your `docker-compose.yml`) and then run the above SQL commands.
+
+---
+
+#### **3. Change the Default Database**
+If the `user` account is restricted to a specific database (e.g., `mydatabase`), you can:
+1. Manually create the `titanic` database via the root user.
+2. Connect to the pre-created database using:
+   ```python
+   db_url = "mysql+pymysql://user:password@mariadb:3306/titanic"
+   ```
+
+In this case, ensure the database already exists:
+```sql
+CREATE DATABASE IF NOT EXISTS titanic;
+```
+
+---
+
+### **Code Update**
+If using the root user to create the database:
+```python
+from sqlalchemy import create_engine, text
+
+# Use root credentials
+db_url = "mysql+pymysql://root:rootpassword@mariadb:3306/"
+engine = create_engine(db_url)
+
+# Create `titanic` database
+with engine.connect() as conn:
+    conn.execute(text("CREATE DATABASE IF NOT EXISTS titanic"))
+```
+
+---
+
+### Final Note
+Once the database is created, revert to using the `user` account for normal operations for better security practices.
