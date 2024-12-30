@@ -1802,3 +1802,191 @@ networks:
   ```
 
 By choosing between the local or cluster setup, you can easily scale your processing or run smaller jobs locally for testing or development.
+
+## normalized vs denormalized tables in Spark
+
+Your skepticism is valid! While there are scenarios where **denormalized (fat) tables** are preferred in Spark's ecosystem, this preference is **context-dependent** and not a one-size-fits-all rule. Let’s explore the reasoning behind using denormalized tables and when it might not be ideal.
+
+---
+
+### Why Denormalized Tables Are Sometimes Preferred in Spark
+
+1. **Optimization for Distributed Processing**:
+   - Spark is designed for distributed data processing, which means every join operation requires shuffling data between partitions and nodes. This can be expensive in terms of both time and resources.
+   - Denormalized tables avoid the need for frequent joins, minimizing shuffles and improving performance for certain types of queries.
+
+2. **Query Simplicity**:
+   - With all the data in one table, queries can be simpler and easier to write, as they don’t involve complex joins.
+
+3. **Reduced I/O Overhead**:
+   - In distributed systems like Spark, accessing multiple tables stored in separate files or partitions can increase I/O overhead. A single, consolidated table reduces this overhead.
+
+4. **OLAP vs. OLTP**:
+   - Spark is typically used for **analytical processing (OLAP)**, not transactional processing (OLTP). Denormalized tables are often more suitable for analytical queries because they align with the star or snowflake schema commonly used in OLAP systems.
+
+---
+
+### Why Denormalized Tables Can Be Problematic
+
+1. **Data Redundancy**:
+   - Denormalized tables store duplicate information, leading to increased storage requirements and the risk of inconsistent data when updates are required.
+
+2. **Lack of Flexibility**:
+   - If you need to adjust your schema or add new relationships, working with a denormalized table can be more challenging than working with normalized tables.
+
+3. **Performance Trade-offs**:
+   - While denormalized tables reduce the need for joins, they can make some queries slower, particularly if the table is very wide (many columns) and includes unnecessary data for a specific query.
+
+4. **Maintenance Complexity**:
+   - Updates, deletes, and inserts can become more cumbersome with denormalized tables because they require maintaining consistency across redundant data.
+
+---
+
+### Best Practices in Spark
+
+- **Use Denormalized Tables**:
+  - For read-heavy analytical workloads where minimizing joins and optimizing query performance is critical.
+  - When the dataset is relatively static (not updated frequently).
+
+- **Use Normalized Tables**:
+  - When the dataset changes frequently, and maintaining data consistency is critical.
+  - For modularity, where smaller, focused tables make maintenance easier.
+
+---
+
+### Why Denormalized Tables Are Used to Avoid Costly Joins
+
+1. **Distributed Systems and Data Shuffling**:
+   - In distributed systems like Spark, join operations often require **shuffling** data between nodes to align rows with matching keys.
+   - Shuffling is **expensive** in terms of:
+     - **Network I/O**: Moving data across the cluster.
+     - **Execution Time**: Sorting and merging data across partitions.
+   - Denormalized tables eliminate the need for joins, thus reducing shuffling.
+
+2. **Query Performance**:
+   - Analytical workloads (OLAP) often involve reading large datasets. With denormalized tables, queries can retrieve all necessary data without traversing multiple tables, which significantly improves performance.
+
+3. **Simplicity**:
+   - Denormalized schemas reduce the complexity of queries by removing the need for joins. This is particularly helpful for tools or teams that prefer simplicity in query-writing.
+
+4. **Storage is Cheap**:
+   - Modern storage systems (e.g., cloud storage) make it relatively inexpensive to store redundant data, which is a trade-off for faster query performance.
+
+---
+
+### The Cost of Joins in Large-Scale Systems
+
+Joins can be computationally expensive for several reasons:
+
+- **Data Volume**: Large datasets magnify the cost of sorting, shuffling, and merging.
+- **Skewed Data**: Uneven distribution of join keys can cause some nodes to process disproportionately more data, creating bottlenecks.
+- **Cluster Resources**: Joins require memory, CPU, and disk I/O, which scale with data size.
+
+---
+
+### When to Use Denormalized Tables
+
+- **OLAP Workloads**:
+  - Analytical queries that scan large datasets and aggregate data benefit from a denormalized structure.
+- **Pre-aggregated Data**:
+  - Denormalized tables work well when storing data that is not frequently updated and is optimized for specific query patterns.
+- **Minimized Updates**:
+  - Denormalized tables are best suited for relatively static datasets since updates and deletions can be cumbersome due to redundancy.
+
+---
+
+### Challenges with Denormalized Tables
+
+- **Data Redundancy**:
+  - Duplicate information increases storage requirements.
+- **Update Complexity**:
+  - Ensuring consistency across redundant fields can be difficult when data is updated.
+- **Wider Tables**:
+  - Extremely wide tables with many columns can slow down queries that only need a subset of data.
+
+---
+
+### Conclusion
+
+Large-scale data systems often **embrace denormalized tables** as a trade-off to optimize query performance and reduce join-related overhead. However, this approach comes with challenges like redundancy and update complexity, so it’s not universally suitable for all use cases. The decision depends on the workload, update frequency, and query patterns.
+
+## ERROR - HADOOP_HOME and hadoop.home.dir are unset
+
+"name": "Py4JJavaError",
+ "message": "An error occurred while calling o144.csv.\n: java.lang.RuntimeException: java.io.FileNotFoundException: java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset. -see <https://wiki.apache.org/hadoop/WindowsProblems>
+
+The error message indicates that Hadoop-related configurations are missing or incorrect in your PySpark environment, specifically on a Windows system. Here’s a breakdown and steps to resolve the issue:
+
+### Cause of the Error
+
+1. **`HADOOP_HOME` and `hadoop.home.dir` Environment Variables Missing**:
+   PySpark relies on some Hadoop binaries (like `winutils.exe`) for file operations on Windows. These binaries must be correctly set up, even if you're not directly working with Hadoop.
+
+2. **Missing or Incorrect Hadoop Binaries**:
+   If `winutils.exe` is not present in the required directory, the operation will fail.
+
+---
+
+### Solution
+
+#### 1. **Download Hadoop Binaries**
+
+- Download a precompiled `winutils.exe` for your Hadoop version.
+  - Commonly used: [winutils repository on GitHub](https://github.com/steveloughran/winutils).
+- Extract the downloaded file to a directory, e.g., `C:\hadoop\bin`.
+
+#### 2. **Set Environment Variables**
+
+- Add `HADOOP_HOME` and `hadoop.home.dir` to your system's environment variables:
+  - **Variable**: `HADOOP_HOME`
+  - **Value**: `C:\hadoop` (path to your Hadoop folder)
+- Add `%HADOOP_HOME%\bin` to the `PATH` variable.
+
+   To do this:
+
+- Search for "Environment Variables" in the Windows Start menu.
+- Edit the system environment variables.
+
+#### 3. **Restart Your System**
+
+   Changes to environment variables require a restart to take effect.
+
+#### 4. **Verify the Setup**
+
+   Open a Command Prompt and run:
+
+   ```bash
+   winutils.exe
+   ```
+
+   If correctly configured, it should execute without errors.
+
+#### 5. **Retry Writing the CSV**
+
+   Run your PySpark code again:
+
+   ```python
+   coalesced_res.write.csv("./data/simple_count_single_partition.csv")
+   ```
+
+---
+
+### Alternative (Without Setting Up Hadoop)
+
+If you do not want to set up Hadoop, you can use PySpark’s local file system capabilities by saving the file as follows:
+
+1. Use PySpark's `toPandas()` and `pandas.DataFrame.to_csv()`:
+
+   ```python
+   coalesced_res.toPandas().to_csv("./data/simple_count_single_partition.csv", index=False)
+   ```
+
+2. Specify the `local[*]` master in your SparkSession:
+   Ensure you are running Spark in local mode:
+
+   ```python
+   from pyspark.sql import SparkSession
+   spark = SparkSession.builder.master("local[*]").appName("MyApp").getOrCreate()
+   ```
+
+Let me know if you need further clarification or assistance!
