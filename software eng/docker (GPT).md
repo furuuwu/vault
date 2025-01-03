@@ -195,3 +195,91 @@ Combine the strategies:
 ---
 
 Would you like an example of a complete project setup for automating dependency syncing?
+
+## ERROR - custom network not found
+
+It seems that the `custom_network` network is still not being created, even though it is specified in your `docker-compose.yml` file. This could happen for several reasons, but let’s troubleshoot and ensure the network is properly created.
+
+### Potential Issues:
+1. **Network Creation in Docker Compose**: Normally, when you run `docker compose up`, it should automatically create the specified networks in the `docker-compose.yml`. If it’s not happening, there could be some issue with Docker Compose or the way it's being used.
+
+2. **Docker Compose File Version**: Since you are using Docker Compose version 3.8, there could be issues with the version or Docker Compose setup.
+
+### Let's go step by step:
+
+### Step 1: Ensure the `docker-compose.yml` file is correct
+Check that the `networks` section in your `docker-compose.yml` file is correctly defined. It should look like this:
+
+```yaml
+networks:
+  custom_network:
+    driver: bridge
+```
+
+### Step 2: Bring down all containers and remove the network (if exists)
+Before re-running the setup, let’s make sure there’s no lingering issue with the previous Docker network. Run:
+
+```bash
+docker compose down --volumes --remove-orphans
+```
+
+This will:
+- Stop and remove containers,
+- Remove networks (including custom networks),
+- Remove any unnamed volumes that may be leftover from a failed run.
+
+### Step 3: Rebuild and recreate the containers with the network
+After ensuring there are no leftover containers or networks, rebuild and start the containers again:
+
+```bash
+docker compose up --build
+```
+
+### Step 4: Verify the network creation
+After running the above command, check if the network is created:
+
+```bash
+docker network ls
+```
+
+Look for `custom_network` in the list.
+
+If the network appears there, you can inspect it with:
+
+```bash
+docker network inspect custom_network
+```
+
+This should return detailed information about the network, including connected containers.
+
+### Step 5: Manually create the network (if necessary)
+If Docker Compose still doesn’t automatically create the network, try manually creating it before starting the containers. Use this command to create the network:
+
+```bash
+docker network create custom_network
+```
+
+Then, you can run:
+
+```bash
+docker compose up
+```
+
+After these steps, check the network again with:
+
+```bash
+docker network inspect custom_network
+```
+
+### Step 6: Debug Docker Compose version
+If it still doesn’t work, there might be an issue with your Docker Compose version or installation. Check your version using:
+
+```bash
+docker compose version
+```
+
+Ensure that you’re using Docker Compose V2 (with the `docker compose` command) and not the legacy V1 (`docker-compose`).
+
+---
+
+Let me know the outcome of these steps.

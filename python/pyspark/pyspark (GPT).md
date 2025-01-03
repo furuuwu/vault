@@ -1990,3 +1990,198 @@ If you do not want to set up Hadoop, you can use PySpark’s local file system c
    ```
 
 Let me know if you need further clarification or assistance!
+
+## ERROR - Jupyter command jupyter-/opt/spark/apps/data_analysis_book/chapter03/word_non_null.py not found
+
+The repeated issue of `jupyter-/opt/spark/apps/data_analysis_book/chapter03/word_non_null.py not found` strongly suggests that the environment variable `PYSPARK_DRIVER_PYTHON` is still being set to `jupyter`, despite attempts to override it in the `spark-submit` command. This is because `spark-submit` reads the environment variables from the container's configuration or defaults in Spark's `spark-env.sh` file.
+
+---
+
+### Diagnosis from Logs
+
+1. **`PYSPARK_DRIVER_PYTHON` Set to Jupyter:**
+   The command is invoking Jupyter (`jupyter-/path/to/script`) because `PYSPARK_DRIVER_PYTHON` is still set to `jupyter`.
+
+2. **Overrides in Command are Ignored:**
+   The `spark-submit` logs show no mention of overriding `PYSPARK_DRIVER_PYTHON`, suggesting the configuration was not applied as expected.
+
+3. **`PYSPARK_DRIVER_PYTHON_OPTS`:**
+   Even if you unset `PYSPARK_DRIVER_PYTHON_OPTS`, the root issue lies in `PYSPARK_DRIVER_PYTHON` still being set to `jupyter`.
+
+---
+
+### Permanent Fix
+
+To resolve this, you need to **permanently unset or change `PYSPARK_DRIVER_PYTHON`** inside the container. Here's how:
+
+---
+
+#### 1. **Modify `spark-env.sh`**
+
+Inside the Spark container, edit the `spark-env.sh` file to set the correct `PYSPARK_DRIVER_PYTHON`:
+
+```bash
+docker exec -it da-spark-master bash
+echo 'export PYSPARK_DRIVER_PYTHON=/usr/bin/python3' >> /opt/spark/conf/spark-env.sh
+echo 'export PYSPARK_DRIVER_PYTHON_OPTS=""' >> /opt/spark/conf/spark-env.sh
+```
+
+Then, restart the container:
+
+```bash
+docker restart da-spark-master
+```
+
+Verify the environment:
+
+```bash
+docker exec da-spark-master bash -c "env | grep PYSPARK"
+```
+
+You should see:
+
+```text
+PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+PYSPARK_DRIVER_PYTHON_OPTS=
+PYSPARK_PYTHON=/usr/bin/python3
+```
+
+---
+
+#### 2. **Reattempt `spark-submit`**
+
+Run the `spark-submit` command again:
+
+```bash
+docker exec da-spark-master spark-submit \
+  --master spark://spark-master:7077 \
+  --deploy-mode client \
+  /opt/spark/apps/data_analysis_book/chapter03/word_non_null.py
+```
+
+---
+
+### Temporary Alternative
+
+If you don't want to restart or modify the container permanently, prepend the environment variables to the `spark-submit` command explicitly:
+
+```bash
+docker exec da-spark-master env \
+  PYSPARK_DRIVER_PYTHON=/usr/bin/python3 \
+  PYSPARK_DRIVER_PYTHON_OPTS="" \
+  spark-submit \
+  --master spark://spark-master:7077 \
+  --deploy-mode client \
+  /opt/spark/apps/data_analysis_book/chapter03/word_non_null.py
+```
+
+This ensures `spark-submit` uses the correct Python interpreter for this session only.
+
+---
+
+### Debugging Tip
+
+If the issue persists:
+
+1. Inspect the `spark-env.sh` file inside the container:
+
+   ```bash
+   cat /opt/spark/conf/spark-env.sh
+   ```
+
+   Ensure no lingering `jupyter` settings are present.
+
+2. Verify the `spark-submit` command logs (`--verbose`) to confirm the correct Python configuration is being applied.
+
+Let me know how this goes!
+
+## MySQL JDBC driver
+
+From your Dockerfile and `docker-compose.yml`, it appears that you're using a custom Spark image (`da-spark-image`), and that image installs Spark along with the necessary dependencies for running PySpark with Jupyter notebooks.
+
+However, the MySQL JDBC driver (`com.mysql.cj.jdbc.Driver`) is **not** included by default in Spark. Although the `mysql-connector-java` is commonly used with Spark to interact with MySQL databases, it's **not bundled** with the base Spark distribution. Therefore, you will need to explicitly add the MySQL JDBC driver to your Spark setup, as explained in the earlier solution.
+
+---
+
+### To Add MySQL JDBC Driver to Your Spark Container
+
+**Download MySQL JDBC Driver**
+Download the MySQL JDBC driver (`mysql-connector-java-<version>.jar`) either from the [MySQL website](https://dev.mysql.com/downloads/connector/j/) or from [Maven Central](https://mvnrepository.com/artifact/mysql/mysql-connector-java).
+
+**Add the JAR to Your Image**
+You need to update your Dockerfile to include the MySQL JDBC driver. Here’s how to do that:
+
+#### Dockerfile Update
+
+Modify your Dockerfile to include the MySQL JDBC driver by copying the downloaded `.jar` file into the Spark classpath.
+
+```dockerfile
+# Add MySQL JDBC driver to the Spark classpath
+COPY mysql-connector-java-<version>.jar /opt/spark/jars/
+```
+
+- Replace `<version>` with the correct version of the MySQL JDBC driver you downloaded.
+
+eg.
+
+```dockerfile
+COPY mysql-connector-java-8.0.33.jar /opt/spark/jars/
+```
+
+**Rebuild Your Spark Image**
+
+After modifying the Dockerfile, rebuild your image to include the driver:
+
+```bash
+docker compose build
+```
+
+**Configure JDBC Connection in Spark**
+After adding the MySQL JDBC driver, you can use the `jdbc` API in Spark to connect to MySQL.
+
+#### Example PySpark code to connect to MySQL
+
+```python
+from pyspark.sql import SparkSession
+
+# Start a Spark session
+spark = SparkSession.builder \
+    .appName("MySQL Test") \
+    .getOrCreate()
+
+# Define JDBC URL
+jdbc_url = "jdbc:mysql://mysql:3306/sakila?useSSL=false&serverTimezone=UTC"
+
+# Load data from MySQL
+df = spark.read.format("jdbc").options(
+    url=jdbc_url,
+    driver="com.mysql.cj.jdbc.Driver",  # Explicitly use the MySQL driver
+    dbtable="actor",
+    user="user",
+    password="password"
+).load()
+
+# Show the data
+df.show()
+```
+
+**Start the Spark Cluster and MySQL Database**
+
+- Ensure your MySQL database (`mysql` service) is running in the container network.
+- Use the `spark-submit` or Jupyter notebook to test the connection.
+
+---
+
+### Using `--packages` Option (Optional Alternative)
+
+Instead of manually copying the JDBC driver to the container, you can use Spark's `--packages` option with `spark-submit` to automatically download the MySQL JDBC driver from Maven:
+
+```bash
+docker exec da-spark-master spark-submit \
+  --master spark://spark-master:7077 \
+  --deploy-mode client \
+  --packages mysql:mysql-connector-java:8.0.33 \
+  /opt/spark/apps/your_spark_script.py
+```
+
+This method does not require you to rebuild the Docker image but will download the driver at runtime when submitting the Spark job.
