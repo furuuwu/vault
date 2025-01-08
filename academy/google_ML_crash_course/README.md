@@ -49,6 +49,19 @@ Data
 
 * Datasets, generalization, and overfitting
 
+  * Identify four different characteristics of data and datasets.
+  * Identify at least four different causes of data unreliability.
+  * Determine when to discard missing data and when to impute it.
+  * Differentiate between direct and derived labels.
+  * Identify two different ways to improve the quality of human-rated labels.
+  * Explain why to subdivide a dataset into a training set, validation set, and test set; identify a potential problem in data splits.
+  * Explain overfitting and identify three possible causes for it.
+  * Explain the concept of regularization. In particular, explain the following:
+  * Bias versus variance (adaptation to outliers…)
+  * L2 regularization, including Lambda (regularization rate)
+  * Early stopping
+  * Interpret different kinds of loss curves; detect convergence and overfitting in loss curves.
+
 Advanced ML methods
 
 * Neural networks
