@@ -28,7 +28,7 @@ TODO! ------------------------->
 
 Data
 
-* Working with numerical data: `numerical_data_stats.ipynb`
+* Working with numerical data: `numerical_data_stats.ipynb`, `numerical_data_bad_values.ipynb`
 
   * Understand feature vectors.
   * Explore your dataset's potential features visually and mathematically.
@@ -41,6 +41,12 @@ Data
     * <https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html>
 
 * Working with categorical data
+
+  * Distinguish categorical data from numerical data.
+  * Represent categorical data with one-hot vectors.
+  * Address common issues with categorical data.
+  * Create feature crosses.
+
 * Datasets, generalization, and overfitting
 
 Advanced ML methods
