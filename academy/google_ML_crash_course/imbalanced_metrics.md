@@ -222,3 +222,92 @@ $$
 ---
 
 These LaTeX formulas will render beautifully in Jupyter Notebook or Markdown files. Let me know if you'd like help implementing them!
+
+Accuracy is often a poor metric for evaluating models on imbalanced datasets because it does not account for the distribution of class labels. Here’s the reasoning behind this and alternative metrics to avoid in such scenarios:
+
+---
+
+### **Why Accuracy is a Poor Metric**
+Accuracy measures the proportion of correctly classified instances:
+
+\[
+\text{Accuracy} = \frac{\text{True Positives (TP)} + \text{True Negatives (TN)}}{\text{Total Samples}}
+\]
+
+In imbalanced datasets, the majority class dominates the dataset. As a result:
+- A model that predicts only the majority class can still achieve a high accuracy, even if it completely ignores the minority class.
+- For example, if 95% of the samples belong to Class A and only 5% belong to Class B:
+  - A model that predicts Class A for all samples will have an accuracy of 95%, but it provides no meaningful insights into detecting Class B.
+
+---
+
+### **Other Metrics That Are Problematic for Imbalanced Datasets**
+1. **Precision Alone**
+   - Precision measures the proportion of true positives among predicted positives:
+     $$
+     \text{Precision} = \frac{\text{TP}}{\text{TP + FP}}
+     $$
+   - Problem: Precision focuses only on the positive predictions and ignores false negatives, making it insufficient when the minority class is under-represented.
+
+2. **Recall Alone**
+   - Recall (or Sensitivity) measures the proportion of true positives out of the actual positives:
+     \[
+     \text{Recall} = \frac{\text{TP}}{\text{TP + FN}}
+     \]
+   - Problem: While recall captures the ability to identify positive instances, it does not penalize a high number of false positives, which can be common in imbalanced datasets.
+
+3. **Specificity Alone**
+   - Specificity measures the proportion of true negatives among all actual negatives:
+     \[
+     \text{Specificity} = \frac{\text{TN}}{\text{TN + FP}}
+     \]
+   - Problem: Like accuracy, specificity can be high for imbalanced datasets if the majority class dominates the negatives.
+
+---
+
+### **Better Metrics for Imbalanced Datasets**
+1. **F1 Score**
+   - The harmonic mean of precision and recall:
+     \[
+     \text{F1 Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+     \]
+   - Why it’s better: The F1 score balances precision and recall, which is particularly useful when there is a class imbalance.
+
+2. **Area Under the Receiver Operating Characteristic (ROC-AUC) Curve**
+   - Measures the model’s ability to discriminate between classes across different thresholds.
+   - Why it’s better: It considers the trade-off between true positive rate (recall) and false positive rate, providing a more nuanced evaluation.
+
+3. **Area Under the Precision-Recall (PR-AUC) Curve**
+   - Focuses on precision and recall across thresholds.
+   - Why it’s better: It is particularly effective when the dataset is highly imbalanced, as it gives more weight to the minority class.
+
+4. **Cohen's Kappa**
+   - Measures the agreement between predicted and actual labels, adjusted for chance:
+     \[
+     \text{Kappa} = \frac{\text{Accuracy} - \text{Expected Accuracy}}{1 - \text{Expected Accuracy}}
+     \]
+   - Why it’s better: It accounts for imbalances in the dataset.
+
+5. **Balanced Accuracy**
+   - An average of recall for each class:
+     \[
+     \text{Balanced Accuracy} = \frac{\text{Sensitivity} + \text{Specificity}}{2}
+     \]
+   - Why it’s better: It gives equal importance to both classes, regardless of their representation.
+
+6. **G-Mean (Geometric Mean)**
+   - The square root of the product of sensitivity and specificity:
+     \[
+     \text{G-Mean} = \sqrt{\text{Sensitivity} \cdot \text{Specificity}}
+     \]
+   - Why it’s better: It balances performance on both classes.
+
+---
+
+### **Conclusion**
+For imbalanced datasets:
+- Avoid **accuracy** as it is biased towards the majority class.
+- Use metrics like **F1 score**, **ROC-AUC**, or **PR-AUC**, as they account for the imbalance and focus on the minority class's performance.
+- Evaluate multiple metrics to get a comprehensive understanding of your model’s behavior. 
+
+Let me know if you’d like an example or further clarification!
