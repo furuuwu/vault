@@ -73,3 +73,6 @@ Real-worlds ML
 * Production ML systems
 * Automated ML
 * Fairness
+  * Become aware of common human biases that can inadvertently be reproduced by ML algorithms.
+  * Proactively explore data to identify sources of bias before training a model.
+  * Evaluate model predictions for bias.
