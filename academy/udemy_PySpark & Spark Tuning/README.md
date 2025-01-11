@@ -6,6 +6,8 @@ on udemy,
 
 Amin Karami - Best Hands-on Big Data Practices with PySpark & Spark Tuning
 
+my rating: 4/10
+
 ![a](img/2024-12-23-10-44-31.png)
 
 ## intro

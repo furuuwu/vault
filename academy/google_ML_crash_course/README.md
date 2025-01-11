@@ -65,6 +65,9 @@ Data
 Advanced ML methods
 
 * Neural networks
+  * links
+
+    * <https://colah.github.io/posts/2014-03-NN-Manifolds-Topology/>
 * Embeddings
 * Large Language Models
 
@@ -76,3 +79,5 @@ Real-worlds ML
   * Become aware of common human biases that can inadvertently be reproduced by ML algorithms.
   * Proactively explore data to identify sources of bias before training a model.
   * Evaluate model predictions for bias.
+
+my rating: 9/10

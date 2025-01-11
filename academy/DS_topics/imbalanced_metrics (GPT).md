@@ -1,8 +1,11 @@
+# imbalanced datasets (GPT)
+
+## metrics
+
 When evaluating model performance on **imbalanced datasets**, traditional metrics like **accuracy** can be misleading. Instead, specialized metrics are used to better capture the model's performance on both the minority and majority classes. Here's a theoretical overview of these metrics, why they're useful, and their formulas:
 
----
-
 ### **1. Precision**
+
 - **Definition**: Measures how many of the predicted positive instances are actually positive.
 
 - **Formula**:
@@ -16,6 +19,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **2. Recall (Sensitivity, True Positive Rate)**
+
 - **Definition**: Measures how many of the actual positive instances the model correctly identified.
 - **Formula**:
   $$
@@ -28,6 +32,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **3. F1 Score**
+
 - **Definition**: The harmonic mean of precision and recall. Balances both metrics.
 - **Formula**:
   $$
@@ -40,6 +45,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **4. Area Under the Curve (AUC) - ROC**
+
 - **Definition**: Measures the area under the Receiver Operating Characteristic (ROC) curve, which plots **True Positive Rate (TPR)** against **False Positive Rate (FPR)** at various thresholds.
 - **Formula for TPR and FPR**:
   $$
@@ -56,6 +62,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **5. Precision-Recall AUC (PR-AUC)**
+
 - **Definition**: The area under the Precision-Recall curve, which plots precision against recall at various thresholds.
 - **Why it's useful**:
   - Focuses on the positive (minority) class.
@@ -64,6 +71,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **6. Geometric Mean (G-Mean)**
+
 - **Definition**: The square root of the product of sensitivity (recall) and specificity.
 - **Formula**:
   $$
@@ -80,6 +88,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **7. Matthews Correlation Coefficient (MCC)**
+
 - **Definition**: Measures the quality of binary classifications, considering true and false positives and negatives.
 - **Formula**:
   $$
@@ -92,6 +101,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **8. Balanced Accuracy**
+
 - **Definition**: The average of recall for both classes.
 - **Formula**:
   $$
@@ -103,6 +113,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **9. Brier Score**
+
 - **Definition**: Measures the accuracy of predicted probabilities.
 - **Formula**:
   $$
@@ -118,6 +129,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 ---
 
 ### **Choosing Metrics Based on Use Case**
+
 - **High class imbalance**:
   - Precision, Recall, F1, PR-AUC, and G-Mean are most relevant.
 - **Equal importance of both classes**:
@@ -125,13 +137,7 @@ When evaluating model performance on **imbalanced datasets**, traditional metric
 - **Probability calibration required**:
   - Brier Score.
 
-### **Summary**
-Different metrics highlight different aspects of model performance. For imbalanced datasets, **Precision, Recall, F1, PR-AUC, G-Mean, MCC, and Balanced Accuracy** are commonly recommended, as they provide a clearer picture of how well the model is handling the minority class while balancing the trade-offs with the majority class.
-
-
-Here are the requested formulas in **LaTeX** syntax, formatted to render correctly in a Jupyter Notebook Markdown cell or an `.md` file. You can paste these directly into a Markdown cell or file to display them properly.
-
----
+## metrics - formulas
 
 ### Sensitivity (Recall or True Positive Rate)
 
@@ -188,6 +194,7 @@ $$
 $$
 
 Where:
+
 - **TPR** = True Positive Rate
 - **FPR** = False Positive Rate
 
@@ -200,6 +207,7 @@ $$
 $$
 
 Where:
+
 - $ y_i $ = True label ($0$ or $1$)
 - $\hat{y}_i $ = Predicted probability for the positive class
 
@@ -219,15 +227,12 @@ $$
 \text{Log Loss} = -\frac{1}{N} \sum_{i=1}^N \left[ y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i) \right]
 $$
 
----
-
-These LaTeX formulas will render beautifully in Jupyter Notebook or Markdown files. Let me know if you'd like help implementing them!
+## metrics - comparison
 
 Accuracy is often a poor metric for evaluating models on imbalanced datasets because it does not account for the distribution of class labels. Here’s the reasoning behind this and alternative metrics to avoid in such scenarios:
 
----
-
 ### **Why Accuracy is a Poor Metric**
+
 Accuracy measures the proportion of correctly classified instances:
 
 \[
@@ -235,6 +240,7 @@ Accuracy measures the proportion of correctly classified instances:
 \]
 
 In imbalanced datasets, the majority class dominates the dataset. As a result:
+
 - A model that predicts only the majority class can still achieve a high accuracy, even if it completely ignores the minority class.
 - For example, if 95% of the samples belong to Class A and only 5% belong to Class B:
   - A model that predicts Class A for all samples will have an accuracy of 95%, but it provides no meaningful insights into detecting Class B.
@@ -242,6 +248,7 @@ In imbalanced datasets, the majority class dominates the dataset. As a result:
 ---
 
 ### **Other Metrics That Are Problematic for Imbalanced Datasets**
+
 1. **Precision Alone**
    - Precision measures the proportion of true positives among predicted positives:
      $$
@@ -266,6 +273,7 @@ In imbalanced datasets, the majority class dominates the dataset. As a result:
 ---
 
 ### **Better Metrics for Imbalanced Datasets**
+
 1. **F1 Score**
    - The harmonic mean of precision and recall:
      \[
@@ -301,13 +309,3 @@ In imbalanced datasets, the majority class dominates the dataset. As a result:
      \text{G-Mean} = \sqrt{\text{Sensitivity} \cdot \text{Specificity}}
      \]
    - Why it’s better: It balances performance on both classes.
-
----
-
-### **Conclusion**
-For imbalanced datasets:
-- Avoid **accuracy** as it is biased towards the majority class.
-- Use metrics like **F1 score**, **ROC-AUC**, or **PR-AUC**, as they account for the imbalance and focus on the minority class's performance.
-- Evaluate multiple metrics to get a comprehensive understanding of your model’s behavior. 
-
-Let me know if you’d like an example or further clarification!
