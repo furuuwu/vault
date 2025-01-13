@@ -36,3 +36,19 @@ Create a resource: Azure Database for PostgreSQL
 ![a](img/2025-01-13-15-23-55.png)
 
 ![a](img/2025-01-13-15-25-39.png)
+
+* connect to it
+
+![a](img/2025-01-13-15-49-54.png)
+
+![a](img/2025-01-13-15-50-49.png)
+
+```python
+import psycopg2
+
+cnx = psycopg2.connect(user="ric", password="{your_password}", host="postgres-test-db.postgres.database.azure.com", port=5432, database="postgres")
+```
+
+* create a database
+
+  <https://github.com/Azure-Samples/postgresql-samples-databases>
