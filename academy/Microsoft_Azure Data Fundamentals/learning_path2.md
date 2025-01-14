@@ -1,5 +1,19 @@
 #
 
+* learning path 2: Explore relational data in Azure
+  * Explore fundamental relational data concepts
+    * Understand relational data
+    * Understand normalization
+    * Explore SQL
+    * Describe database objects
+  * Explore relational database services in Azure
+    * Describe Azure SQL services and capabilities
+    * Describe Azure services for open-source databases
+    * labs
+      * [Explore Azure SQL Database](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-01-sql-lab.html)
+      * [Explore Azure Database for PostgreSQL](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-01a-postgresql-lab.html)
+      * [Explore Azure Database for MySQL](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-01b-mysql-lab.html)
+
 In a relational database, you model collections of entities from the real world as tables. An entity can be anything for which you want to record information; typically important objects and events. For example, in a retail system example, you might create tables for customers, products, orders, and line items within an order. A table contains rows, and each row represents a single instance of an entity. In the retail scenario, each row in the customer table contains the data for a single customer, each row in the product table defines a single product, each row in the order table represents an order made by a customer, and each row in the line item table represents a product that was included in an order.
 
 Relational tables are a format for structured data, and each row in a table has the same columns; though in some cases, not all columns need to have a value – for example, a customer table might include a MiddleName column; which can be empty (or NULL) for rows that represent customers with no middle name or whose middle name is unknown.

@@ -1,5 +1,16 @@
 #
 
+* learning path 1: Explore core data concepts
+  * module 1: Explore core data concepts
+    * Identify data formats
+    * Explore file storage
+    * Explore databases
+    * Explore transactional data processing
+    * Explore analytical data processing
+  * module 2: Explore data roles and services
+    * Explore job roles in the world of data
+    * Identify data services
+
 ## data formats
 
 ### Structured data

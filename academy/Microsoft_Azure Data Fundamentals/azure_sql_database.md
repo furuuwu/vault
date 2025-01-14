@@ -1,5 +1,7 @@
 #
 
+[Explore Azure SQL Database](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-01-sql-lab.html)
+
 Provision an Azure SQL Database resource
 
 * Create a resource: Azure SQL

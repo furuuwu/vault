@@ -1,5 +1,7 @@
 # Azure Cosmos DB
 
+[Explore Azure Cosmos DB](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-03-cosmos-lab.html)
+
 ![a](img/2025-01-13-17-36-10.png)
 
 Azure Cosmos DB supports multiple application programming interfaces (APIs) that enable developers to use the programming semantics of many common kinds of data store to work with data in a Cosmos DB database. The internal data structure is abstracted, enabling developers to use Cosmos DB to store and query data using APIs with which they're already familiar.
@@ -112,15 +114,71 @@ g.V().hasLabel('employee').order().by('id')
 
 ## lab
 
-Create a resource: Azure Cosmos DB for NoSQL
+* Create a resource: Azure Cosmos DB for NoSQL
 
-Subscription: If you’re using a sandbox, select Concierge Subscription. Otherwise, select your Azure subscription.
-Resource group: If you’re using a sandbox, select the existing resource group (which will have a name like learn-xxxx…). Otherwise, create a new resource group with a name of your choice.
-Account Name: Enter a unique name
-Location: Choose any recommended location
-Capacity mode: Provisioned throughput
-Apply Free-Tier Discount: Select Apply if available
-Limit total account throughput: Unselected
+  * values
+  * Subscription: If you’re using a sandbox, select Concierge Subscription. Otherwise, select your Azure subscription.
+  * Resource group: If you’re using a sandbox, select the existing resource group (which will have a name like learn-xxxx…). Otherwise, create a new resource group with a name of your choice.
+  * Account Name: Enter a unique name
+  * Location: Choose any recommended location
+  * Capacity mode: Provisioned throughput
+  * Apply Free-Tier Discount: Select Apply if available
+  * Limit total account throughput: Unselected
 
 ![a](img/2025-01-13-17-55-20.png)
 
+![a](img/2025-01-14-09-24-27.png)
+
+![a](img/2025-01-14-09-25-06.png)
+
+![a](img/2025-01-14-09-25-33.png)
+
+![a](img/2025-01-14-09-26-13.png)
+
+![a](img/2025-01-14-09-26-41.png)
+
+![a](img/2025-01-14-09-27-16.png)
+
+![a](img/2025-01-14-09-27-44.png)
+
+* Create a sample database
+
+Data Explorer > Launch quick start. It creates a container called SampleContainer with a SampleDB
+
+![a](img/2025-01-14-09-36-23.png)
+
+![a](img/2025-01-14-09-37-14.png)
+
+![a](img/2025-01-14-09-37-47.png)
+
+![a](img/2025-01-14-09-38-23.png)
+
+* View and create items
+
+  * create a new blank item (New item)
+  * modify the JSON for the new item (Save)
+
+  ```json
+  {
+      "name": "Road Helmet,45",
+      "id": "123456789",
+      "categoryID": "123456789",
+      "SKU": "AB-1234-56",
+      "description": "The product called \"Road Helmet,45\" ",
+      "price": 48.74
+  }
+  ```
+
+![a](img/2025-01-14-09-43-18.png)
+
+* Query the database
+
+Data Explorer > New SQL Query
+
+```sql
+SELECT *
+FROM c
+WHERE CONTAINS(c.name,"Helmet")
+```
+
+![a](img/2025-01-14-09-46-14.png)

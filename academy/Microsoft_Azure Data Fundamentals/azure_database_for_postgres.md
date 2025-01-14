@@ -1,5 +1,7 @@
 #
 
+[Explore Azure Database for PostgreSQL](https://microsoftlearning.github.io/DP-900T00A-Azure-Data-Fundamentals/Instructions/Labs/dp900-01a-postgresql-lab.html)
+
 Create a resource: Azure Database for PostgreSQL
 
 * select Flexible server (Recommended)
