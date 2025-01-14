@@ -24,8 +24,6 @@ ML Models
   * Calculate and choose appropriate metrics to evaluate a binary classification model.
   * Interpret ROC and AUC.
 
-TODO! ------------------------->
-
 Data
 
 * Working with numerical data: `numerical_data_stats.ipynb`, `numerical_data_bad_values.ipynb`
@@ -65,16 +63,41 @@ Data
 Advanced ML methods
 
 * Neural networks
+  * Explain the motivation for building neural networks, and the use cases they address.
+  * Define and explain the function of the key components of a deep neural network architecture: Nodes, Hidden layers, Activation functions
+  * Develop intuition around how neural network predictions are made, by stepping through the inference process.
+  * Build a high-level intuition of how neural networks are trained, using the backpropagation algorithm.
+  * Explain how neural networks can be used to perform two types of multi-class classification: one-vs.-all and one-vs.-one.
   * links
 
     * <https://colah.github.io/posts/2014-03-NN-Manifolds-Topology/>
 * Embeddings
+
+  * Visualize vector representations of word embeddings, such as word2vec.
+  * Distinguish encoding from embedding.
+  * Describe contextual embedding.
 * Large Language Models
+  * Define a few different types of language models and their components.
+  * Describe how large language models are created and the importance of context and parameters.
+  * Identify how large language models take advantage of self-attention.
+  * Reveal three key problems with large language models.
+  * Explain how fine-tuning and distillation can improve a model's predictions and efficiency.
 
 Real-worlds ML
 
 * Production ML systems
+
+  * Appreciate the breadth of components in a production ML system.
+  * Pick the ideal training paradigm (static versus dynamic).
+  * Pick the ideal inference paradigm (static versus dynamic).
+  * Test your machine learning deployment.
+  * Ask the right questions about your production ML system.
+  * Determine flaws in real-world ML models.
+  * Monitor the components in a production ML system.
 * Automated ML
+  * Automate tasks in a machine learning workflow.
+  * Determine the benefits and limitations of using AutoML with your machine learning model.
+  * Enumerate the common AutoML patterns and apply them to your ML projects.
 * Fairness
   * Become aware of common human biases that can inadvertently be reproduced by ML algorithms.
   * Proactively explore data to identify sources of bias before training a model.
