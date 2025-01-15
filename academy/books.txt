@@ -1,0 +1,203 @@
+Best (imo)
+B2023 Python crash course, matthes NO-STARCH-PRESS.pdf
+B2023 Applied machine learning and AI for engineers, prosise REILLY.pdf
+B2022 Designing machine learning systems, huyen REILLY.pdf
+B2020 Learn Docker in a month of lunches, stoneman MANNING.pdf
+B2024 Generative AI in action, bahree MANNING.pdf
+B2023 Building data science applications with FastAPI, voron PACKT.pdf
+B2023 Streamlit for data science, richards PACKT.pdf
+B2024 Databricks ML in action, rivera PACKT.pdf
+
+Both
+
+Business
+B2015 Accounting succinctly, booth SYNCFUSION.pdf
+
+Cloud
+B2022 The self-taught cloud computing engineer, song PACKT.pdf
+B2022 Data science on the Google Cloud Platform, lakshmanan REILLY.pdf
+B2020 Learn Azure in a month of lunches, foulds MANNING.pdf
+B2024 Mastering Terraform, tinderholt PACKT.pdf
+B2023 Data engineering with AWS, eagar PACKT.pdf
+B2021 Automated machine learning with Microsoft Azure, sawyers PACKT.pdf
+B2022 Azure machine learning engineering, fakhraee PACKT.pdf
+
+Dbs
+B2022 Database design succinctly, booth SYNCFUSION.pdf
+B2021 SQL for data scientists, teate WILEY.pdf
+B2024 DuckDB in action, needham MANNING.pdf
+B2023 Learn PostgreSQL, ferrari PACKT.pdf
+B2023 Devops for databases, jambor PACKT.pdf
+B2023 Database systems, coronel CENGAGE.pdf
+B2023 Data wrangling with SQL, kandarpa PACKT.pdf
+B2022 The MySQL workshop, cosentino PACKT.pdf
+B2018 Practical SQL, debarros NO-STARCH-PRESS.pdf
+
+Git
+B2023 Learning Git, skoulikari REILLY.pdf
+B2015 Learn Git in a month of lunches, umali MANNING.pdf
+
+Pyspark
+B2022 Data analysis with Python and PySpark, rioux MANNING.pdf
+
+Python
+B2024 Programming with Python for engineers, kalkan SPRINGER.pdf
+B2019 Python for programmers, deitel PEARSON.pdf
+B2023 Python crash course, matthes NO-STARCH-PRESS.pdf
+B2023 Advanced guide to Python 3 programming, hunt SPRINGER.pdf
+B2022 The Python workshop, wade PACKT.pdf
+B2022 Python testing with pytest, okken PRAGMATIC-PROGRAMMER.pdf
+B2020 Clean code in Python, anaya PACKT.pdf
+B2019 A beginners guide to Python 3 programming, hunt SPRINGER.pdf
+
+Python - pandas
+B2022 The Pandas workshop, bateman PACKT.pdf
+B2022 Hands-on data preprocessing in Python, jafari PACKT.pdf
+
+Software engineering
+B2024 Software engineering for data scientists, nelson REILLY.pdf
+
+Streamlit
+B2023 Streamlit for data science, richards PACKT.pdf
+
+Web scraping
+B2023 Hands-on web scraping with Python, chapagain PACKT.pdf
+
+Data engineering
+
+B2022 Fundamentals of data engineering, reis REILLY.pdf
+
+Airflow
+B2021 Data pipelines with Apache Airflow, harenslak MANNING.pdf
+
+APIs
+B2022 Building Python web APIs with FastAPI, adeshina PACKT.pdf
+B2023 Microservice APIs, peralta MANNING.pdf
+B2023 Building data science applications with FastAPI, voron PACKT.pdf
+
+Containers
+B2021 Learn Kubernetes in a month of lunches, stoneman MANNING.pdf
+B2020 Learn Docker in a month of lunches, stoneman MANNING.pdf
+B2024 Kubernetes for developers, dеnniss MANNING.pdf
+B2024 Bootstrapping microservices, davis MANNING.pdf
+B2023 The ultimate Docker container book, schenker PACKT.pdf
+
+Dbt
+B2024 Analytics engineering with SQL and dbt, machado REILLY.pdf
+B2023 Data engineering with dbt, zagni PACKT.pdf
+
+Devops
+B2022 Learning devops, krief PACKT.pdf
+B2022 Devops for the desperate, smith NO-STARCH-PRESS.pdf
+
+Event streams
+B2019 Event streams in action, dean MANNING.pdf
+B2024 Kafka streams in action, bejeck MANNING.pdf
+B2021 Scalable data streaming with Amazon Kinesis, makota PACKT.pdf
+
+Linux
+B2021 How Linux works, ward NO-STARCH-PRESS.pdf
+B2024 The software developer's guide to Linux, cohen PACKT.pdf
+B2019 Linux basics for hackers, occupytheweb NO-STARCH-PRESS.pdf
+Sqlalchemy
+B2016 Essential SQLAlchemy, myers REILLY.pdf
+
+Data science
+
+B2024 Introduction to data science, igual SPRINGER.pdf
+B2021 Data analysis for business, economics, and policy, bekes CAMBRIDGE.pdf
+B2016 Introducing data science, cielen MANNING.pdf
+B2021 Mechanistic data science for stem education and applications, liu SPRINGER.pdf
+B2021 Data science at the command line, janssens REILLY.pdf
+
+Math
+B2021 A student's guide to Python for physical modeling, kinder PRINCETON.pdf
+B2024 Mathematical methods using Python, kulp CRC.pdf
+B2023 Linear algebra with Python, tsukada SPRINGER.pdf
+B2023 Computational mathematics, mitsotakis CRC.pdf
+B2020 The statistics and calculus with Python workshop, nguyen PACKT.pdf
+B2020 Modern engineering mathematics, james PEARSON.pdf
+B2018 Advanced modern engineering mathematics, james PEARSON.pdf
+
+AI
+B2022 Artificial Intelligence, russell PEARSON.pdf
+
+ML
+B2022 Designing machine learning systems, huyen REILLY.pdf
+B2023 Applied machine learning and AI for engineers, prosise REILLY.pdf
+B2022 Feature engineering bookcamp, ozdemir MANNING.pdf
+B2021 Machine learning bookcamp, grigorev MANNING.pdf
+B2021 AI and machine learning for coders, moroney REILLY.pdf
+B2025 Outlier detection in Python, kennedy MANNING.pdf
+B2024 Python feature engineering cookbook, galli PACKT.pdf
+B2023 Machine learning for physics and astronomy, acquaviva PRINCETON.pdf
+B2023 Machine learning with Python, zollanvari SPRINGER.pdf
+B2022 TensorFlow in action, ganegedara MANNING.pdf
+B2023 Machine learning for imbalanced data, abhishek PACKT.pdf
+B2022 Data cleaning and exploration with machine learning, walker PACKT.pdf
+B2021 Deep learning with Python, chollet MANNING.pdf
+B2020 Programming machine learning, perrotta PRAGMATIC-PROGRAMMERS.pdf
+B2020 Data science and machine learning, kroese CRC.pdf
+B2017 Introduction to machine learning with Python, muller REILLY.pdf
+B2017 A first course in machine learning, rogers CRC.pdf
+
+ML - autoML
+B2022 Practical automated machine learning using H2O.ai, ajgaonkar PACKT.pdf
+B2022 Machine learning at scale with H2O, whiting PACKT.pdf
+B2022 Automated machine learning in action, song MANNING.pdf
+
+ML - Databricks
+B2024 Databricks ML in action, rivera PACKT.pdf
+
+ML - generative AI
+B2023 Generative deep learning, foster REILLY.pdf
+B2024 Generative AI on AWS, fregly REILLY.pdf
+B2024 Generative AI in action, bahree MANNING.pdf
+B2023 Pretrain vision and large language models in Python, webber PACKT.pdf
+B2023 Generative AI with LangChain, auffarth PACKT.pdf
+
+ML - NLP
+B2022 Getting started with natural language processing, kochmar MANNING.pdf
+B2023 Natural language understanding with Python, dahl PACKT.pdf
+B2022 Natural language processing with transformers, tunstall REILLY.pdf
+B2021 Transfer learning for natural language processing, azunre MANNING.pdf
+B2021 Real-world natural language processing, hagiwara MANNING.pdf
+B2019 Natural language processing with PyTorch, rao REILLY.pdf
+B2019 Natural language processing in action, lane MANNING.pdf
+
+ML - time series
+B2022 Time series forecasting in Python, peixeiro MANNING.pdf
+
+ML - vision
+B2024 Modern computer vision with PyTorch, reddy PACKT.pdf
+
+ML - RL
+B2020 Foundations of deep reinforcement learning, graesser PEARSON.pdf
+
+ML - pytorch
+B2024 Math and architectures of deep learning, chaudhury MANNING.pdf
+B2024 Mastering PyTorch, jha PACKT.pdf
+B2020 Deep learning with Pytorch, viehmann MANNING.pdf
+
+Dask
+B2019 Data science with Python and Dask, daniel MANNING.pdf
+
+Power BI
+B2024 Beginning Power BI for business users, fuller WILEY.pdf
+B2024 Data modeling with Microsoft Power BI, jensen REILLY.pdf
+B2023 Expert data modeling with Power BI, bakhshi PACKT.pdf
+B2022 Learning Microsoft Power BI, arnold REILLY.pdf
+
+Misc
+
+Computer science
+B2021 Discovering computer science, havill CRC.pdf
+B2018 Foundations of computer science, forouzan CENGAGE.pdf
+
+Sciences - domain knowledge
+B2024 Data science for neuroimaging, rokem PRINCETON.pdf
+B2023 Introduction to environmental data science, hsieh CAMBRIDGE.pdf
+
+Electronics
+B2024 Biosignal acquisition and processing, silva SPRINGER.pdf
+B2021 A geek girl's guide to electronics and the internet of things, shea WILEY.pdf
