@@ -1,1 +1,0 @@
-![cat](img/Pasted_image_20241214152000.png)

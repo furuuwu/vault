@@ -1,32 +1,34 @@
-# install Git
+# Git
+
+## install Git
 
 ## installing Git for Windows
 
-![](img/2024-12-14-18-39-05.png)
+![a](img/2024-12-14-18-39-05.png)
 
-![](img/2024-12-14-18-39-43.png)
+![a](img/2024-12-14-18-39-43.png)
 
-![](img/2024-12-14-18-39-59.png)
+![a](img/2024-12-14-18-39-59.png)
 
-![](img/2024-12-14-18-40-16.png)
+![a](img/2024-12-14-18-40-16.png)
 
-![](img/2024-12-14-18-40-35.png)
+![a](img/2024-12-14-18-40-35.png)
 
-![](img/2024-12-14-18-40-52.png)
+![a](img/2024-12-14-18-40-52.png)
 
-![](img/2024-12-14-18-41-15.png)
+![a](img/2024-12-14-18-41-15.png)
 
-![](img/2024-12-14-18-41-34.png)
+![a](img/2024-12-14-18-41-34.png)
 
-![](img/2024-12-14-18-42-01.png)
+![a](img/2024-12-14-18-42-01.png)
 
-![](img/2024-12-14-18-42-17.png)
+![a](img/2024-12-14-18-42-17.png)
 
-# git configuration
+## git configuration
 
-![](img/2024-12-14-19-56-27.png)
+![a](img/2024-12-14-19-56-27.png)
 
-## read the existing configuration
+### read the existing configuration
 
 `git config --list`
 
@@ -40,7 +42,7 @@ To know the email, type:
 
 `git config user.email`
 
-## set a configuration
+### set a configuration
 
 You can set configurations globally or locally.
 
@@ -70,11 +72,11 @@ git config --global core.editor "code --wait --new-window"
 
 This sets vscode as the default code editor
 
-The global configurations are stored in a file (`~/.gitconfig`). 
+The global configurations are stored in a file (`~/.gitconfig`).
 
-![](img/2024-12-14-18-45-28.png)
+![a](img/2024-12-14-18-45-28.png)
 
-![](img/2024-12-14-18-49-53.png)
+![a](img/2024-12-14-18-49-53.png)
 
 You can navigate there and change them, or you can use this command to open that file for you
 
@@ -82,20 +84,19 @@ You can navigate there and change them, or you can use this command to open that
 git config --edit --global
 ```
 
-In each git repo (`.git/`) you have a local `config` file 
+In each git repo (`.git/`) you have a local `config` file
 
-![](img/2024-12-14-18-58-52.png)
+![a](img/2024-12-14-18-58-52.png)
 
 Setting a local configuration changes this file
 
-![](img/2024-12-14-18-59-43.png)
+![a](img/2024-12-14-18-59-43.png)
 
-
-# manage multiple accounts
+## manage multiple accounts
 
 create a configuration file for teh SSH client. You should have something like this
 
-![](img/2024-12-14-19-58-55.png)
+![a](img/2024-12-14-19-58-55.png)
 
 and you need to set the username and email on a per repository basis
 
@@ -113,8 +114,28 @@ git remote add origin git@github-capgemini.com:ric-capgemini/proj1_Luiz_Ricardo.
 git push -u origin main
 ```
 
-# resources
+## git commands
 
-* https://www.youtube.com/watch?v=ap56ivm0dhw
+* Remove directory from Git and local
 
-* https://docs.github.com/en/get-started/getting-started-with-git/setting-your-username-in-git#setting-your-git-username-for-a-single-repository
+Checkout 'master' with both directories
+
+```bash
+git rm -r one-of-the-directories // This deletes from filesystem
+git commit . -m "Remove duplicated directory"
+git push origin <your-git-branch>
+```
+
+* Remove directory from Git but NOT local
+
+To remove this directory from Git, but not delete it entirely from the filesystem (local)
+
+```bash
+git rm -r --cached myFolder
+```
+
+## resources
+
+* <https://www.youtube.com/watch?v=ap56ivm0dhw>
+
+* <https://docs.github.com/en/get-started/getting-started-with-git/setting-your-username-in-git#setting-your-git-username-for-a-single-repository>
