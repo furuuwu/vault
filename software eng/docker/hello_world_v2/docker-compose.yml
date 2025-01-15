@@ -1,0 +1,10 @@
+services:
+  # Defines the services (containers) to be run.
+  hello-world:
+    # Name of the service. You can name it anything
+    build:
+      # Build the image from the Dockerfile
+      context: . # Use the current directory as the build context
+      # that means, the Dockerfile in the current directory will be used
+    command: python hello.py # Override the default command (optional)
+    # in this case, it's optional because the Dockerfile already specifies CMD ["python", "hello.py"]

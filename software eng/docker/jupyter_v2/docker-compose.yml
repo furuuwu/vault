@@ -1,0 +1,10 @@
+services:
+  jupyter:
+    image: jupyter-notebook-image # Use the prebuilt image from the previous step
+    build: . # This is only needed if you want to build the image via Compose instead of using the prebuilt image
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app # Mount the notebooks directory on the local machine
+    environment:
+      - JUPYTER_TOKEN=your-token-here # Set the token for authentication (optional)
