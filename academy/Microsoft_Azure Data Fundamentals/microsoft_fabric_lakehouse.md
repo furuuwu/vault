@@ -5,7 +5,6 @@
 * Sign in
 * switch to the Data Engineering experience
 
-
   ![a](img/2025-01-14-10-07-37.png)
 
   ![a](img/2025-01-14-10-08-25.png)
