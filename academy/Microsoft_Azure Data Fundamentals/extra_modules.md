@@ -24,18 +24,6 @@
 
   Streaming data refers to perpetual sources of data that generate data values in real-time, often relating to specific events. Common sources of streaming data include internet-of-things (IoT) devices and social media feeds. Data engineers often need to implement solutions that capture real-time stream of data and ingest them into analytical data systems, often combining the real-time data with other application data that is processed in batches.
 
-## Azures services for data engineering
-
-Microsoft Azure includes many services that can be used to implement and manage data engineering workloads.
-
-* Azure Synapse Analytics
-* Azure Data Lake Storage Gen2
-* Azure Stream Analytics
-* Azure Data Factory
-* Azure Databricks
-
-![a](img/2025-01-15-18-22-09.png)
-
 ## services - general: resources, billing
 
 ![a](img/2025-01-16-11-50-12.png)

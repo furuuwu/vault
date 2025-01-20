@@ -10,6 +10,8 @@ To support the analytics needs of today's organizations, Azure Synapse Analytics
 
 ## types of analytics
 
+Data analytics is the process of gathering raw data and examining it to draw conclusions from it. This process can be difficult if the data is in multiple locations, such as hosted databases and on-premises locations.
+
 * Descriptive analytics, which answers the question “What is happening in my business?”. The data to answer this question is typically answered through the creation of a data warehouse in which historical data is persisted in relational tables for multidimensional modeling and reporting.
 
 * Diagnostic analytics, which deals with answering the question “Why is it happening?”. This may involve exploring information that already exists in a data warehouse, but typically involves a wider search of your data estate to find more data to support this type of analysis.
