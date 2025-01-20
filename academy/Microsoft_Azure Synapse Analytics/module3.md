@@ -81,6 +81,12 @@ df = spark.read.load('abfss://container@store.dfs.core.windows.net/products.csv'
     format='csv',
     header=True
 )
+"""
+df = spark.read.load('/data/products.csv',
+    format='csv',
+    header=True
+)
+"""
 display(df.limit(10))
 ```
 
@@ -89,6 +95,7 @@ The %%pyspark line at the beginning is called a magic, and tells Spark that the 
 ```java
 %%spark
 val df = spark.read.format("csv").option("header", "true").load("abfss://container@store.dfs.core.windows.net/products.csv")
+// val df = spark.read.format("csv").option("header", "true").load("/data/products.csv")
 display(df.limit(10))
 ```
 

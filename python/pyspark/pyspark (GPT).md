@@ -1,5 +1,39 @@
 # pyspark (GPT)
 
+## jobs, stages, tasks
+
+### **Tasks**
+
+- A **task** is the smallest unit of execution in Spark. 
+- Each task processes a single partition of data, and tasks are assigned to slots in executors for parallel execution.
+- Tasks are created for each stage and represent the work to be done on a specific partition of the dataset.
+- For example, if a stage has 100 partitions, there will be 100 tasks in that stage.
+
+### **Stages**
+
+- A **stage** is a larger logical unit of execution in Spark.
+- It represents a set of operations that can be executed sequentially without requiring any shuffling or repartitioning of data.
+- Stages are determined by the **DAG (Directed Acyclic Graph)** of operations. A stage boundary is typically set when a shuffle operation (e.g., `groupBy`, `reduceByKey`, or `join`) is needed to reorganize data.
+- Each stage is divided into multiple tasks, where each task processes a single partition.
+
+### How They Relate
+
+1. A **job** in Spark is broken into **stages** based on the dependencies in the DAG of operations.
+2. Each **stage** contains multiple **tasks**, where each task corresponds to processing one partition of the data.
+3. If a job requires multiple stages (e.g., because of a shuffle), then tasks in one stage must complete before tasks in the next stage can begin.
+
+### Example
+
+Imagine you have a Spark job to compute the word count of a dataset stored in multiple partitions:
+
+1. **Stage 1**: Map phase
+   - Operations like `flatMap` or `map` process each partition independently.
+   - If there are 4 partitions, there will be 4 tasks in this stage.
+2. **Stage 2**: Reduce phase
+   - A shuffle is required to group words across partitions (e.g., `reduceByKey`).
+   - This triggers a new stage where tasks process the shuffled data.
+   - Again, if there are 4 partitions after the shuffle, there will be 4 tasks in this stage.
+
 ## findspark
 
 ### What is `findspark`?

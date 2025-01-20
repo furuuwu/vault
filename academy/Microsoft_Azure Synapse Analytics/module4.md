@@ -18,6 +18,38 @@ Delta Lake is supported in Azure Synapse Analytics Spark pools for PySpark, Scal
 
 ## Create Delta Lake tables
 
+You can create a Delta table either by converting an existing Parquet table or by defining a new table directly in Delta format.
+
+```python
+# Create a Delta table
+data = spark.range(0, 5)
+data.write.format("delta").save("/FileStore/tables/my_delta_table")
+
+# Read and write data
+# Append data to a Delta table using DataFrame API
+new_data = spark.range(5, 10)
+new_data.write.format("delta").mode("append").save("/FileStore/tables/my_delta_table")
+```
+
+### creating a Delta table with a defined schema
+
+Create a Delta table with a specific schema either programmatically using Spark SQL or by using the DataFrame API.
+
+```sql
+-- Create a Delta table using Spark SQL
+CREATE TABLE my_delta_table_schema (
+    id INT,
+    name STRING,
+    age INT
+);
+
+-- Insert valid data
+INSERT INTO my_delta_table_schema (id, name, age)
+VALUES
+(1, 'Alice', 30),
+(2, 'Bob', 25);
+```
+
 ### creating a Delta Lake table from a dataframe
 
 Delta lake is built on tables, which provide a relational storage abstraction over files in a data lake.
@@ -84,6 +116,90 @@ Alternatively, you can specify a timestamp by using the timestampAsOf option:
 
 ```python
 df = spark.read.format("delta").option("timestampAsOf", '2022-01-01').load(delta_table_path)
+```
+
+eg.
+
+```sql
+-- Create the Delta table
+CREATE TABLE person_data (
+    id INT,
+    name STRING,
+    age INT
+);
+
+-- Insert initial data
+INSERT INTO person_data (id, name, age)
+VALUES
+(1, 'Alice', 30),
+(2, 'Bob', 25);
+
+
+-- Perform some updates on the table. Each update creates a new version of the Delta table.
+-- Update age of Bob
+UPDATE person_data
+SET age = 26
+WHERE name = 'Bob';
+
+-- Insert a new record
+INSERT INTO person_data (id, name, age)
+VALUES
+(3, 'Charlie', 28);
+
+-- Query table history
+-- You can view the history of the Delta table to see all the changes made to it. The DESCRIBE HISTORY command displays a list of all the versions of the table, along with details such as the operation performed, timestamp, and user who performed the operation.
+DESCRIBE HISTORY person_data;
+
+-- Time travel queries
+-- You can query previous versions of the table using the VERSION AS OF or TIMESTAMP AS OF syntax.
+-- Query data as of version 0
+SELECT * FROM person_data VERSION AS OF 0;
+-- Query data as of a specific timestamp
+SELECT * FROM person_data TIMESTAMP AS OF '2024-07-22T10:00:00Z';
+
+-- Revert to a previous version
+-- If you need to revert the table to a previous state, you can use the RESTORE command.
+-- Restore the table to version 0
+RESTORE TABLE person_data TO VERSION AS OF 0;
+-- Restore the table to a specific timestamp
+RESTORE TABLE person_data TO TIMESTAMP AS OF '2024-07-22T10:00:00Z';
+```
+
+### handle schema mismatches
+
+You can use the MERGE statement to handle updates and insertions in a way that accommodates schema changes.
+
+```sql
+-- Define a temporary view with new data
+CREATE OR REPLACE TEMP VIEW my_new_delta_table_schema AS
+SELECT * FROM VALUES
+(3, 'Charlie', 28),
+(4, 'Diana', 35)
+AS my_new_delta_table_schema(id, name, age);
+
+-- Use MERGE to upsert data
+MERGE INTO my_delta_table_schema AS target
+USING my_new_delta_table_schema AS source
+ON target.id = source.id
+WHEN MATCHED THEN
+  UPDATE SET
+    target.name = source.name,
+    target.age = source.age
+WHEN NOT MATCHED THEN
+  INSERT (id, name, age)
+  VALUES (source.id, source.name, source.age);
+```
+
+If the incoming data types are different but compatible, you can use the cast function to align the schemas.
+
+```sql
+-- Insert data with casting to match the schema
+INSERT INTO my_delta_table_schema
+SELECT
+  cast(id as INT),
+  cast(name as STRING),
+  cast(age as INT)
+FROM my_new_delta_table_schema;
 ```
 
 ## Create catalog tables
