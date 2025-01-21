@@ -7,9 +7,9 @@
   * Examine real world data
 
   * nbs
-    * `01-numpy-and-pandas.ipynb`
-    * `02-visualize-data.ipynb`
-    * `03-real-world-data.ipynb`
+    * `1_1-numpy-and-pandas.ipynb`
+    * `1_2-visualize-data.ipynb`
+    * `1_3-real-world-data.ipynb`
     * `01 - Flights Challenge.ipynb`
 
 ## NumPy, Pandas, Jupyter
