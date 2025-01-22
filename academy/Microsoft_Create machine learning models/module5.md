@@ -115,8 +115,10 @@ installing locally
 
 customize the url to your needs <https://pytorch.org/get-started/locally/>
 
+eg. if only using CPU,
+
 ```bash
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip3 install torch torchvision torchaudio
 ```
 
 in requirements_pytorch.txt it's listed like this
@@ -125,6 +127,18 @@ in requirements_pytorch.txt it's listed like this
 torch
 torchvision
 torchaudio
+```
+
+so you can just run
+
+```bash
+pip install -r requirements_pytorch.txt
+```
+
+but if you want to use a version of CUDA (Compute Unified Device Architecture, extends the C/C++ programming languages, enabling developers to write programs that can execute on the GPU)
+
+```bash
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
 and install it like this (using your custom url)

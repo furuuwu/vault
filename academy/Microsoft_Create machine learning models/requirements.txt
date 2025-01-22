@@ -9,6 +9,7 @@ scipy
 # ML
 scikit-learn
 tensorflow
+imbalanced-learn
 
 # images
 pillow
