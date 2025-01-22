@@ -30,3 +30,5 @@ this path <https://learn.microsoft.com/en-us/training/paths/create-machine-learn
   * Deep neural network concepts
   * Convolutional neural networks
   * Transfer learning
+
+my_rating: 9/10
