@@ -2,9 +2,9 @@
 
 ## course info
 
-on udemy,
+on Udemy,
 
-Amin Karami - Best Hands-on Big Data Practices with PySpark & Spark Tuning
+[Amin Karami - Best Hands-on Big Data Practices with PySpark & Spark Tuning](https://www.udemy.com/course/best-hands-on-big-data-practices-and-use-cases-using-pyspark)
 
 my rating: 4/10
 

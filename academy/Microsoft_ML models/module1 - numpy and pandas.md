@@ -41,3 +41,27 @@ It's important to realize that most real-world data are influenced by factors th
 In other situations, data points that are clearly outside of what's expected—also known as "outliers"—can sometimes be safely removed from analyses, although we must take care to not remove data points that provide real insights.
 
 Another common issue in real-world data is bias. Bias refers to a tendency to select certain types of values more frequently than others in a way that misrepresents the underlying population, or "real world". Bias can sometimes be identified by exploring data while keeping in mind basic knowledge about where the data came from.
+
+## Types of ML
+
+* Predictive
+  * Supervised machine learning in which the model is trained using data that includes known label values (so an algorithm uses the existing data to establish a relationship between x and y, resulting in a function that can be applied to x to calculate y).
+  * Unsupervised machine learning in which the model is trained using only feature (x) values, and groups (or clusters) observations with similar features.
+* Generative
+* Reinforcement
+
+---
+
+Types of Supervised ML
+
+* Regression algorithms
+
+  in which the label is a numeric value, such as a price, temperature, amount, or other value that can be measured. Regression algorithms produce models in which the function (f) operates on the features (x) to calculate the numeric value of the label (y).
+
+  For example, a regression algorithm could be used to train a model that predicts the expected number of ice creams sold by a kiosk in a park on a given day based on features like the month of the year, the day of the week, the temperature, the humidity, and so on.
+
+* Classification algorithms
+
+  in which the label is a discrete category (or class). Classification algorithms produce models in which the function (f) operates on the features (x) to calculate a probability value for each possible class, and returns the label (y) for the class with the highest probability.
+
+  For example, a classification algorithm could be used to train a model that predicts whether or not a patient has diabetes based on features like blood-insulin level, weight, height, age and so on. A classification model that identifies one of two possible classes (such as true or false) is an example of binary classification. Algorithms that predict probability for more than two classes (for example, differentiating between patients without diabetes, type 1 diabetes, or type 2 diabetes) are used for multiclass classification.
