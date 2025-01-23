@@ -134,6 +134,10 @@ Simple models with small datasets can often be fit in a single step, while large
 
 Hyperparameters are values that change the way that the model is fit during these loops. Learning rate, for example, is a hyperparameter that sets how much a model is adjusted during each training cycle. A high learning rate means a model can be trained faster; but if it’s too high, the adjustments can be so large that the model is never "finely tuned" and not optimal.
 
+Depending on the algorithm used, you may need to specify hyperparameters to configure how the model is trained. For example, the logistic regression algorithm uses a regularization rate hyperparameter to counteract overfitting; and deep learning neural network models use hyperparameters like learning rate to control how weights are adjusted during training.
+
+The hyperparameter values you select for a given algorithm can have a significant effect on the model it trains; so choosing the right hyperparameter values can make the difference between a model that predicts well when used with new data, and a model that doesn't.
+
 ### Preprocessing data
 
 Preprocessing refers to changes you make to your data before it's passed to the model. We've previously read that preprocessing can involve cleaning your dataset. While this is important, preprocessing can also include changing the format of your data so it's easier for the model to use. For example, data described as "red," "orange," "yellow," "lime," and "green" might work better if converted into a format more native to computers, such as numbers stating the amount of red and the amount of green.

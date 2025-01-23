@@ -45,3 +45,7 @@
   * Explore model deployment strategies
   * Explore model versioning and lifecycle management
   * [lab](https://microsoftlearning.github.io/mslearn-databricks/Instructions/Exercises/DS-07-Machine-learning-in-production.html)
+
+This is less correct but more hands-on than the [documentation](https://learn.microsoft.com/en-us/azure/databricks/machine-learning/).
+
+my_rating: 8/10
