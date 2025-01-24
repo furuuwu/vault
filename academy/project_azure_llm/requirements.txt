@@ -1,0 +1,12 @@
+azure-identity
+azure-mgmt-resource
+azure-mgmt-cognitiveservices
+azure-search-documents
+azure-ai-formrecognizer 
+openai
+python-dotenv
+langchain 
+langchain-community 
+azure-ai-documentintelligence
+langchain-openai
+ipykernel
