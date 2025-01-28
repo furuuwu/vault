@@ -2,10 +2,9 @@
 
 Using SQLite with Python's sqlite3 module
 
-
 ## cursor version
 
-1. execute SQL statements
+* execute SQL statements
 
 The cursor.execute method is used to run SQL commands, like creating tables, inserting, updating, or deleting data.
 
@@ -29,7 +28,7 @@ VALUES (?, ?, ?)
 
 ```
 
-2. Execute multiple statements
+* Execute multiple statements
 
 Use cursor.executemany to run the same SQL statement for multiple sets of data.
 
@@ -47,9 +46,10 @@ VALUES (?, ?, ?)
 """, users)
 ```
 
-3. Fetch data
+* Fetch data
 
 Retrieve query results with one of the following methods:
+
 * fetchone() - fetches a single row
 * fetchall() - fetches all rows from the result set
 * fetchmany(size) - fetches a specified number of rows.
@@ -70,7 +70,7 @@ rows = cursor.fetchmany(2)
 print(rows)
 ```
 
-4. Count rows
+* Count rows
 
 The cursor.rowcount property returns the number of rows affected by the last operation.
 
@@ -88,7 +88,7 @@ UPDATE users SET age = ? WHERE name = ?
 print("Rows affected:", cursor.rowcount)
 ```
 
-5. Parameterized queries
+* Parameterized queries
 
 Use placeholders (`?`) for secure and efficient SQL execution, especially when handling user input. This helps prevent SQL injection.
 
@@ -98,9 +98,10 @@ SELECT * FROM users WHERE email = ?
 """, ("john.doe@example.com",))
 ```
 
-6. Transaction management
+* Transaction management
 
 SQLite transactions are automatically managed, but you can explicitly control them:
+
 * Commit Changes: Save changes to the database.
 * Rollback Changes: Undo uncommitted changes.
 
@@ -109,7 +110,7 @@ conn.commit()
 conn.rollback()
 ```
 
-7.  List database metadata
+* List database metadata
 
 Retrieve metadata such as existing tables or columns.
 
@@ -125,7 +126,7 @@ columns = cursor.fetchall()
 print("Columns:", columns)
 ```
 
-8. Close Resources
+* Close Resources
 
 Always close the cursor and connection when you're done.
 
@@ -138,6 +139,7 @@ conn.close()
 ```
 
 To ensure the connection is always closed, you can use a context manager.
+
 ```python
 with sqlite3.connect('example.db') as conn:
     cursor = conn.cursor()
@@ -154,6 +156,7 @@ with sqlite3.connect('example.db') as conn:
 ## pandas version
 
 changes:
+
 * listing tables: Used `pd.read_sql_query` to fetch existing tables into a DataFrame.
 * Inserting Data: Used `to_sql` to insert single or multiple rows from pandas DataFrames into the SQLite table.
 * Retrieving Data: Replaced `cursor.fetchall()` with `pd.read_sql_query` for direct loading of query results into DataFrames.
