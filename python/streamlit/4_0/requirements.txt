@@ -1,0 +1,9 @@
+streamlit<2.0.0
+matplotlib
+scikit-learn<2.0.0
+jupyter
+ipykernel
+seaborn
+
+# Hugging Face's Transformers + Pytorch
+transformers[torch]<5.0.0

@@ -1,4 +1,4 @@
-#
+# 1 - Introduction
 
 Goal:
 
@@ -18,6 +18,8 @@ Mostly copypasted from
 streamlit<2.0.0
 matplotlib
 ```
+
+script that does that for you: `setup_env.sh`
 
 ## run the demo
 
