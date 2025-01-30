@@ -1,15 +1,5 @@
 # 1 - Introduction
 
-Goal:
-
-* learning streamlit
-* examples from the basics to deployment
-
-Mostly copypasted from
-
-* [docs](https://docs.streamlit.io/)
-* [2023 Streamlit for data science, Richards PACKT](https://www.amazon.com/Streamlit-Data-Science-Create-interactive-ebook/dp/B0BTHRBC2W/)
-
 ## create a venv, install the dependencies
 
 ```none

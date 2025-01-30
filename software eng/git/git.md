@@ -134,8 +134,17 @@ To remove this directory from Git, but not delete it entirely from the filesyste
 git rm -r --cached myFolder
 ```
 
+* Change the capitalization of a directory
+
+```shell
+git mv somename tmpname
+git mv tmpname SomeName
+```
+
+<https://stackoverflow.com/questions/6899582/i-change-the-capitalization-of-a-directory-and-git-doesnt-seem-to-pick-up-on-it>
+
 ## resources
 
-* <https://www.youtube.com/watch?v=ap56ivm0dhw>
+* [Seeker Labs - Multiple Github accounts on one computer with SSH](https://www.youtube.com/watch?v=ap56ivm0dhw)
 
 * <https://docs.github.com/en/get-started/getting-started-with-git/setting-your-username-in-git#setting-your-git-username-for-a-single-repository>
