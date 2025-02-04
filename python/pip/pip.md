@@ -31,3 +31,14 @@ pip uninstall -r requirements.txt -y
 ```
 
 or, if they are in a virtualenv, just delete the virtualenv (it's usually much faster)
+
+## Upgrade pip
+
+```shell
+python -m pip install --upgrade pip
+# or
+python -m ensurepip --upgrade
+
+# this is sometimes needed
+python -m pip install --upgrade pip setuptools wheel
+```

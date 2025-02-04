@@ -1,15 +1,29 @@
 # WSL
 
+## to learn
+
+* [NetworkChuck - Linux on Windows](https://www.youtube.com/watch?v=vxTW22y8zV8)
+
 ## documentation
 
 <https://learn.microsoft.com/en-gb/windows/wsl/>
 
-## installations
+## installation
+
+(optional) Install the Terminal app from the Windows Store
 
 ```shell
 # list distributions
 wsl --list --verbose
+wsl.exe -l -v # same thing
 ```
+
+```shell
+# install it
+wsl --install
+```
+
+![a](img/2025-02-04-15-09-53.png)
 
 set a distribution as the default
 
@@ -19,6 +33,16 @@ wsl --set-default <distribution-name>
 # eg
 wsl --set-default Ubuntu
 ```
+
+![a](img/2025-02-04-15-13-00.png)
+
+Other distros i can install
+
+```shell
+wsl --list --online
+```
+
+![a](img/2025-02-04-15-15-45.png)
 
 ## launch and terminate
 
@@ -59,7 +83,7 @@ passwd <user_name>
 editing the default wsl configurations
 (`~/.wslconfig`)
 
-- you can change the default user there (eg. to root or devcontainers)
+* you can change the default user there (eg. to root or devcontainers)
 
 ![a](img/2024-12-16-16-32-12.png)
 
