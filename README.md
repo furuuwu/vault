@@ -1,5 +1,5 @@
 # vault
 
-WIP
+conclusions so far:
 
-TODO
+* i should probably stick to WSL because installing on Windows is redunant and causes problems with some tools

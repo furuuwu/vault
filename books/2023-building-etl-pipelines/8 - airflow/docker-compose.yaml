@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15 # Use the latest or specific version
+    container_name: postgres_container
+    restart: always # Ensures it restarts if it crashes
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: chicago_dmv
+    ports:
+      - "5432:5432" # Expose PostgreSQL port
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Persist data
+
+volumes:
+  pgdata: # Named volume to persist database data

@@ -10,6 +10,7 @@ ipykernel = "*"
 certifi = "*"
 urllib3 = "*"
 lxml = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
