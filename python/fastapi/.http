@@ -1,0 +1,21 @@
+### Root
+GET http://127.0.0.1:8000
+
+### Path and query parameters
+GET http://127.0.0.1:8000/items/6?q=hello
+
+### automatic documention - by openapi
+GET http://127.0.0.1:8000/docs
+
+### automatic documention - by redoc
+GET http://127.0.0.1:8000/redoc
+
+### Put request
+PUT http://127.0.0.1:8000/items/6
+Content-Type: application/json
+
+{
+  "name": "new name",
+  "price": 0,
+  "is_offer": true
+}

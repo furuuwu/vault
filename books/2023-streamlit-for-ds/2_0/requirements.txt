@@ -1,6 +1,0 @@
-matplotlib
-pandas
-scikit_learn
-seaborn
-streamlit<2.0.0
-snowflake-connector-python

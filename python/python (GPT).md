@@ -1,6 +1,6 @@
 # python (GPT)
 
-## Why/how use the dataclasses module in Python?
+## QUESTION: dataclasses module in Python
 
 The `dataclasses` module in Python simplifies the creation of classes by automatically generating boilerplate code such as initializers (`__init__`), representation methods (`__repr__`), and comparisons (`__eq__`, `__lt__`, etc.) for you. This is particularly useful when you want to define classes primarily to store data, like the `ExperimentSettings` class in your example.
 

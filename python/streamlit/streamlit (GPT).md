@@ -1,6 +1,6 @@
 # streamlit (GPT)
 
-## use cases and alternatives
+## QUESTION: use cases and alternatives
 
 ### **Use Cases of Streamlit**
 
@@ -190,7 +190,7 @@ While Streamlit is an excellent tool for creating data-driven applications quick
 | **Suitable For**            | Fast prototyping, data apps      | Complex, high-performance apps | Custom web apps, APIs | Data analysis and reporting    | Jupyter notebook users        | Data analysis and interactive plots |
 | **Support for Interactivity** | Good with widgets, simple UI     | Excellent with interactivity   | Full control over front-end | Excellent with R-based widgets | Moderate (widgets in Jupyter) | Excellent with plot interactivity |
 
-## main concepts
+## QUESTION: streamlit main concepts
 
 **Streamlit** is an open-source app framework primarily used to create **data applications** and **interactive dashboards** with Python. It is designed to be easy to use, allowing developers and data scientists to build web applications for their data analysis projects with minimal effort, especially for tasks such as creating **interactive visualizations**, **machine learning models**, or **data exploration apps**. Streamlit emphasizes simplicity and rapid prototyping, and it requires no front-end web development experience.
 
@@ -399,4 +399,255 @@ if uploaded_file is not None:
     # Show accuracy
     accuracy = accuracy_score(y_test, y_pred)
     st.write(f"Model Accuracy: {accuracy * 100:.2f}%")
+```
+
+## QUESTION: asynchronous execution in streamlit
+
+1. **Streamlit is synchronous by default**: Streamlit scripts run from top to bottom in a linear fashion. If you want to use asynchronous code (like Promises), you need to handle it properly.
+2. **Promises are a JavaScript concept**: Promises are part of JavaScript, not Python. In Python, the equivalent concept is **`asyncio`** and **`await`** for asynchronous programming.
+3. **Using `asyncio` in Streamlit**: If you want to use asynchronous code in Python, you can use the `asyncio` library. Streamlit has limited support for `asyncio`, but you can make it work with some effort.
+
+---
+
+### Example: Using `asyncio` in Streamlit
+
+Here’s an example of how you can use `asyncio` to simulate asynchronous behavior in Streamlit:
+
+```python
+import streamlit as st
+import asyncio
+
+# Simulate an asynchronous task
+async def fetch_data():
+    await asyncio.sleep(3)  # Simulate a delay (e.g., API call)
+    return "Data fetched!"
+
+# Function to run the async task
+def run_async_task():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    result = loop.run_until_complete(fetch_data())
+    loop.close()
+    return result
+
+# Streamlit app
+st.title("Async Example in Streamlit")
+
+if st.button("Fetch Data"):
+    with st.spinner("Fetching data..."):
+        data = run_async_task()
+    st.success(data)
+```
+
+---
+
+### Explanation
+
+1. **`fetch_data`**: This is an asynchronous function that simulates a task (e.g., an API call) using `await asyncio.sleep(3)`.
+2. **`run_async_task`**: This function runs the asynchronous task in a new event loop. Streamlit doesn’t natively support `await`, so you need to manage the event loop manually.
+3. **Streamlit UI**: When the user clicks the "Fetch Data" button, the app runs the asynchronous task and displays the result.
+
+---
+
+### Limitations
+
+- Streamlit’s execution model is not designed for asynchronous code, so you need to handle event loops manually.
+- If you’re working with external APIs or long-running tasks, consider using **caching** (`@st.cache_data` or `@st.cache_resource`) to improve performance.
+
+---
+
+### Alternative: Use JavaScript Promises in Custom Components
+
+If you’re working with JavaScript-based components (e.g., custom Streamlit components), you can use Promises directly in the JavaScript code. For example:
+
+```javascript
+// Example JavaScript code in a custom component
+function fetchData() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve("Data fetched!");
+        }, 3000);
+    });
+}
+
+fetchData().then((data) => {
+    console.log(data);
+});
+```
+
+In this case, you would need to build a custom Streamlit component to integrate JavaScript with your Python app.
+
+## QUESTION: conditional rendering and callbacks
+
+```python
+# Example: conditional rendering of buttons
+
+import streamlit as st
+
+# Initialize session state to track button visibility
+if "show_second_button" not in st.session_state:
+    st.session_state.show_second_button = False
+
+if "show_action_buttons" not in st.session_state:
+    st.session_state.show_action_buttons = False
+
+# Title
+st.title("Nested Buttons Example")
+
+# First button
+if st.button("Click me to show another button"):
+    st.session_state.show_second_button = True
+
+# Second button (conditionally displayed)
+if st.session_state.show_second_button:
+    if st.button("Click me to show action buttons"):
+        st.session_state.show_action_buttons = True
+
+# Action buttons (conditionally displayed)
+if st.session_state.show_action_buttons:
+    st.write("Choose an action:")
+    if st.button("Action 1"):
+        st.success("You clicked Action 1!")
+    if st.button("Action 2"):
+        st.success("You clicked Action 2!")
+    if st.button("Action 3"):
+        st.success("You clicked Action 3!")
+
+# Reset button to hide all buttons
+if st.button("Reset"):
+    st.session_state.show_second_button = False
+    st.session_state.show_action_buttons = False
+    st.experimental_rerun()  # Refresh the app to reflect changes
+```
+
+```python
+# Example: nested buttons inside a form
+
+import streamlit as st
+
+# Initialize session state to track button visibility
+if "show_second_button" not in st.session_state:
+    st.session_state.show_second_button = False
+
+if "show_action_buttons" not in st.session_state:
+    st.session_state.show_action_buttons = False
+
+# Title
+st.title("Nested Buttons Inside a Form")
+
+# Create a form
+with st.form("nested_buttons_form"):
+    # First button
+    if st.form_submit_button("Click me to show another button"):
+        st.session_state.show_second_button = True
+
+    # Second button (conditionally displayed)
+    if st.session_state.show_second_button:
+        if st.form_submit_button("Click me to show action buttons"):
+            st.session_state.show_action_buttons = True
+
+    # Action buttons (conditionally displayed)
+    if st.session_state.show_action_buttons:
+        st.write("Choose an action:")
+        if st.form_submit_button("Action 1"):
+            st.session_state.selected_action = "Action 1"
+        if st.form_submit_button("Action 2"):
+            st.session_state.selected_action = "Action 2"
+        if st.form_submit_button("Action 3"):
+            st.session_state.selected_action = "Action 3"
+
+    # Reset button to hide all buttons
+    if st.form_submit_button("Reset"):
+        st.session_state.show_second_button = False
+        st.session_state.show_action_buttons = False
+        st.session_state.selected_action = None
+
+# Display the selected action outside the form
+if "selected_action" in st.session_state and st.session_state.selected_action:
+    st.success(f"You clicked {st.session_state.selected_action}!")
+```
+
+```python
+# Example: using callbacks with nested buttons in a form
+
+import streamlit as st
+
+# Initialize session state
+if "show_second_button" not in st.session_state:
+    st.session_state.show_second_button = False
+
+if "show_action_buttons" not in st.session_state:
+    st.session_state.show_action_buttons = False
+
+if "selected_action" not in st.session_state:
+    st.session_state.selected_action = None
+
+# Callback for the first button
+def show_second_button():
+    st.session_state.show_second_button = True
+
+# Callback for the second button
+def show_action_buttons():
+    st.session_state.show_action_buttons = True
+
+# Callback for action buttons
+def handle_action(action):
+    st.session_state.selected_action = action
+
+# Callback for the reset button
+def reset():
+    st.session_state.show_second_button = False
+    st.session_state.show_action_buttons = False
+    st.session_state.selected_action = None
+
+# Title
+st.title("Nested Buttons Inside a Form with Callbacks")
+
+# Create a form
+with st.form("nested_buttons_form"):
+    # First button
+    st.form_submit_button(
+        "Click me to show another button",
+        on_click=show_second_button,
+    )
+
+    # Second button (conditionally displayed)
+    if st.session_state.show_second_button:
+        st.form_submit_button(
+            "Click me to show action buttons",
+            on_click=show_action_buttons,
+        )
+
+    # Action buttons (conditionally displayed)
+    if st.session_state.show_action_buttons:
+        st.write("Choose an action:")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.form_submit_button(
+                "Action 1",
+                on_click=handle_action,
+                args=("Action 1",),
+            )
+        with col2:
+            st.form_submit_button(
+                "Action 2",
+                on_click=handle_action,
+                args=("Action 2",),
+            )
+        with col3:
+            st.form_submit_button(
+                "Action 3",
+                on_click=handle_action,
+                args=("Action 3",),
+            )
+
+    # Reset button
+    st.form_submit_button(
+        "Reset",
+        on_click=reset,
+    )
+
+# Display the selected action outside the form
+if st.session_state.selected_action:
+    st.success(f"You clicked {st.session_state.selected_action}!")
 ```

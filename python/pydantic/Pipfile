@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pydantic = "<3.0.0"
+mypy = "<2.0.0"
+notebook = "<8.0.0"
+ipykernel = "*"
+email-validator = "*"
+pydantic-settings = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

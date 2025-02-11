@@ -1,8 +1,0 @@
-pandas
-numpy
-ipython
-ipykernel
-jupyter
-findspark
-pyspark==3.5.3
-mysql-connector-python

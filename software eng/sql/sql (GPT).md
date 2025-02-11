@@ -1,6 +1,6 @@
-#
+# sql (GPT)
 
-## Delimiters and mysql.connector
+## QUESTION: Delimiters and mysql.connector
 
 The error you're encountering (`MySQLInterfaceError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax`) is related to how MySQL handles `DELIMITER` and triggers within a script.
 
